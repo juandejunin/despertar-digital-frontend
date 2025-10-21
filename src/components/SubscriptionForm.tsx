@@ -1,23 +1,26 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect } from "preact/hooks";
 
 export default function SubscriptionForm() {
-  const [city, setCity] = useState('');
-  const [time, setTime] = useState('');
+  const [city, setCity] = useState("");
+  const [time, setTime] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Opcional: precargar configuración actual del backend
+  // URL del backend vía ngrok
+  const NGROK_URL = "https://interlobular-subphylar-kacie.ngrok-free.dev";
+
+  // Precargar configuración actual del backend
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/config');
+        const res = await fetch(`${NGROK_URL}/api/config`);
         const data = await res.json();
         if (res.ok && data.data) {
-          setCity(data.data.city || '');
-          setTime(data.data.cronSchedule || '');
-          console.log('⚙️ Configuración actual cargada:', data.data);
+          setCity(data.data.city || "");
+          setTime(data.data.cronSchedule || "");
+          console.log("⚙️ Configuración actual cargada:", data.data);
         }
       } catch (err) {
-        console.error('❌ Error al cargar configuración inicial:', err);
+        console.error("❌ Error al cargar configuración inicial:", err);
       }
     };
     fetchConfig();
@@ -27,17 +30,20 @@ export default function SubscriptionForm() {
     e.preventDefault();
 
     if (!city || !time) {
-      alert('Por favor seleccioná ciudad y horario.');
+      alert("Por favor seleccioná ciudad y horario.");
       return;
     }
 
-    console.log('📤 Enviando configuración:', { city, cronSchedule: time });
+    console.log("📤 Enviando configuración:", { city, cronSchedule: time });
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch(`${NGROK_URL}/api/config`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "MI_TOKEN_SECRETO_123", // 👈 el mismo que en .env del back
+        },
         body: JSON.stringify({ city, cronSchedule: time }),
       });
 
@@ -45,15 +51,14 @@ export default function SubscriptionForm() {
 
       if (!response.ok) {
         alert(`❌ Error: ${data.message}`);
-        setLoading(false);
         return;
       }
 
       alert(`✅ ¡Suscripción registrada!\nCiudad: ${city}\nHorario: ${time}`);
-      console.log('✅ Respuesta del backend:', data);
+      console.log("✅ Respuesta del backend:", data);
     } catch (err) {
-      console.error('❌ Error enviando configuración:', err);
-      alert('❌ Ocurrió un error al suscribirte. Intenta nuevamente.');
+      console.error("❌ Error enviando configuración:", err);
+      alert("❌ Ocurrió un error al suscribirte. Intenta nuevamente.");
     } finally {
       setLoading(false);
     }
@@ -67,7 +72,12 @@ export default function SubscriptionForm() {
 
       <form onSubmit={handleSubmit} class="space-y-5">
         <div>
-          <label htmlFor="city" class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+          <label
+            htmlFor="city"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Ciudad
+          </label>
           <select
             id="city"
             value={city}
@@ -84,7 +94,12 @@ export default function SubscriptionForm() {
         </div>
 
         <div>
-          <label htmlFor="time" class="block text-sm font-medium text-gray-700 mb-1">Horario</label>
+          <label
+            htmlFor="time"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Horario
+          </label>
           <select
             id="time"
             value={time}
@@ -105,7 +120,7 @@ export default function SubscriptionForm() {
           class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
           disabled={loading}
         >
-          {loading ? 'Enviando...' : 'Suscribirme'}
+          {loading ? "Enviando..." : "Suscribirme"}
         </button>
       </form>
 
