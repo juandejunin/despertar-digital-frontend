@@ -1,5 +1,4 @@
 ---
-// Layout.astro
 import '../styles/global.css';
 ---
 
@@ -7,12 +6,14 @@ import '../styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Despertar Digital</title>
+    <meta name="description" content="Solo datos, sin relatos. Noticias automatizadas y objetivas." />
     <slot name="head" />
   </head>
-  <body class="font-sans text-gray-900 min-h-screen bg-gray-50">
-    <!-- Contenedor principal: flex vertical -->
-    <div class="flex flex-col min-h-screen">
-      <slot />
-    </div>
+  <body class="font-sans text-gray-900 min-h-screen bg-gray-50 flex flex-col">
+    <slot />
+    <footer class="mt-auto text-center py-6 text-sm text-gray-500 border-t">
+      © {new Date().getFullYear()} Despertar Digital — Solo datos, sin relatos.
+    </footer>
   </body>
 </html>

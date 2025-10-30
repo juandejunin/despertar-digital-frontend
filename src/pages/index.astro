@@ -1,15 +1,37 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import NavBar from '../components/NavBar.astro';
-import SubscriptionForm from '../components/SubscriptionForm.tsx';
+import Layout from "../layouts/Layout.astro";
+import NavBar from "../components/NavBar.astro";
+import TelegramCard from "../components/TelegramCard.astro";
+import NewsFeed from "../components/NewsFeed.astro";
+import WeatherCard from "../components/WeatherCard.astro";
 ---
 
 <Layout>
   <NavBar />
+  <!-- Tarjeta del clima -->
+  <WeatherCard />
 
-  <section class="flex-1 flex items-center justify-center bg-gray-100">
-    <div class="bg-white p-10 rounded-2xl shadow-lg max-w-md w-full space-y-6">
-      <SubscriptionForm client:load />
+  <!-- Sección principal -->
+  <section
+    class="flex flex-col items-center justify-center text-center py-16 bg-gray-50"
+  >
+    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">
+      Despertar Digital
+    </h2>
+
+    <p class="text-gray-600 max-w-2xl mb-10 text-lg">
+      Solo datos, sin relatos. Noticias automatizadas, libres de interpretación.
+    </p>
+
+    <!-- Tarjeta con QR y botón de Telegram -->
+    <TelegramCard />
+  </section>
+
+  <!-- Sección de titulares -->
+  <section class="bg-white py-16">
+    <div class="max-w-5xl mx-auto px-6">
+      <h3 class="text-2xl font-bold text-gray-900 mb-6">Últimos titulares</h3>
+      <NewsFeed />
     </div>
   </section>
 </Layout>

@@ -1,0 +1,19 @@
+---
+// Componente que llama a tu backend para obtener la ciudad
+let geoData = { city: 'desconocida' };
+
+try {
+  const response = await fetch('http://5.250.191.54/api/geo'); // URL de tu backend
+  if (response.ok) {
+    geoData = await response.json();
+  }
+} catch (error) {
+  console.error("Error al obtener la ubicación:", error);
+}
+---
+
+<div class="bg-gray-100 p-4 rounded-lg mb-6">
+  <p class="text-gray-800 font-medium text-lg">
+    Estás en <strong>{geoData.city}</strong>
+  </p>
+</div>
