@@ -1,0 +1,250 @@
+---
+/* 🌦️ WeatherBar.astro */
+const API_URL = import.meta.env.PUBLIC_API_URL;
+console.log('registerUrl:', API_URL);
+---
+
+<div
+  id="weather-bar"
+  class="w-full bg-gradient-to-r from-blue-50 to-blue-100 text-gray-800 py-2 px-4
+         flex items-center justify-center text-sm shadow-sm border-b border-blue-200"
+  data-api-url={API_URL}  
+>
+  <span class="animate-pulse text-gray-500">Cargando clima…</span>
+</div>
+
+<script type="module">
+  // @ts-check
+
+  /**
+   * @typedef {{ ip: string; city: string; country: string }} Location
+   * @typedef {{
+   *   description: string;
+   *   temperature: number;
+   *   feels_like: number;
+   *   humidity: number;
+   *   wind_speed: number;
+   *   wind_deg: number;
+   *   pressure: number;
+   *   visibility: number;
+   * }} Weather
+   * @typedef {{
+   *   aqi: number;
+   *   label: string;
+   *   emoji: string;
+   *   formatted: string;
+   *   components: Record<string, number>;
+   *   timestamp: number;
+   * }} Air
+   * @typedef {{
+   *   location: Location;
+   *   weather: Weather;
+   *   air: Air;
+   * }} WeatherAirResponse
+   */
+
+  const bar = document.getElementById("weather-bar");
+  const API_URL = bar?.dataset.apiUrl;
+  console.log("registerUrl:", API_URL);
+
+  if (typeof window !== "undefined") {
+    /**
+     * Lee ?city=... de la URL para permitir override manual.
+     * @returns {string | undefined}
+     */
+    function getCityFromQuery() {
+      try {
+        const url = new URL(window.location.href);
+        const city = url.searchParams.get("city");
+        return city ? city.trim() : undefined;
+      } catch {
+        return undefined;
+      }
+    }
+
+    /** TTL de caché en ms (5 minutos) */
+    const CACHE_TTL_MS = 5 * 60 * 1000;
+
+    /**
+     * Genera la clave de caché según la ciudad.
+     * @param {string | undefined} city
+     * @returns {string}
+     */
+    function cacheKey(city) {
+      return `weather-air:${city || "auto"}`;
+    }
+
+    /**
+     * Lee el caché desde sessionStorage.
+     * @param {string | undefined} city
+     * @returns {WeatherAirResponse | null}
+     */
+    function readCache(city) {
+      const raw = sessionStorage.getItem(cacheKey(city));
+      if (!raw) return null;
+      try {
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts < CACHE_TTL_MS)
+          return /** @type {WeatherAirResponse} */ (data);
+      } catch {}
+      return null;
+    }
+
+    /**
+     * Escribe los datos de clima en caché.
+     * @param {string | undefined} city
+     * @param {WeatherAirResponse} data
+     * @returns {void}
+     */
+    function writeCache(city, data) {
+      sessionStorage.setItem(
+        cacheKey(city),
+        JSON.stringify({ ts: Date.now(), data })
+      );
+    }
+
+    /**
+     * Formatea números de manera segura.
+     * @param {number | string | undefined | null} n
+     * @param {number} [digits=0]
+     * @returns {string}
+     */
+    function formatNumber(n, digits = 0) {
+      const num = Number(n);
+      if (Number.isNaN(num)) return "—";
+      return num.toLocaleString(undefined, {
+        maximumFractionDigits: digits,
+        minimumFractionDigits: digits,
+      });
+    }
+
+    /**
+     * fetch con timeout usando AbortController.
+     * @param {string} url
+     * @param {RequestInit} [opts]
+     * @param {number} [timeoutMs=8000]
+     * @returns {Promise<Response>}
+     */
+    async function fetchWithTimeout(url, opts = {}, timeoutMs = 8000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, { ...opts, signal: controller.signal });
+        return res;
+      } finally {
+        clearTimeout(id);
+      }
+    }
+
+    /**
+     * Renderiza la barra con datos del backend.
+     * @param {WeatherAirResponse} data
+     * @returns {void}
+     */
+    function renderBar(data) {
+      const bar = document.getElementById("weather-bar");
+      if (!bar) return;
+
+      const city = data?.location?.city || "—";
+      const country = data?.location?.country || "";
+      const w = data?.weather || /** @type {Weather} */ ({});
+      const a = data?.air || /** @type {Air} */ ({});
+
+      const temp = formatNumber(w?.temperature, 0);
+      const feels = formatNumber(w?.feels_like, 0);
+      const hum = formatNumber(w?.humidity, 0);
+      const wind = formatNumber(w?.wind_speed, 1);
+
+      const aqiFormatted =
+        a?.formatted ||
+        (a?.aqi ? `${a.emoji || "🌫️"} ${a.label || "—"} (AQI ${a.aqi})` : "—");
+
+      bar.innerHTML = `
+        <span class="mr-2">📍 <strong>${city}</strong>${country ? `, ${country}` : ""}</span>
+        <span class="mx-2">🌤️ ${w?.description ?? "—"}</span>
+        <span class="mx-2">🌡️ ${temp}°C <span class="text-gray-500">/ se siente ${feels}°C</span></span>
+        <span class="mx-2">💧 ${hum}%</span>
+        <span class="mx-2">💨 ${wind} m/s</span>
+        <span class="mx-2" title="Calidad del aire">${aqiFormatted}</span>
+      `;
+    }
+
+    /**
+     * Muestra un error en la barra.
+     * @param {string} [msg="No se pudo obtener el clima"]
+     * @returns {void}
+     */
+    function renderError(msg = "No se pudo obtener el clima") {
+      const bar = document.getElementById("weather-bar");
+      if (bar) {
+        bar.innerHTML = `<span class="text-red-600 text-xs">${msg}</span>`;
+      }
+    }
+
+    /**
+     * Carga datos (con caché) y renderiza.
+     * @returns {Promise<void>}
+     */
+    async function loadWeatherAir() {
+      const city = getCityFromQuery();
+
+      // 1) Intenta caché inmediato
+      const cached = readCache(city);
+      if (cached) {
+        renderBar(cached);
+        // 2) Refresca en background sin bloquear UI
+        refreshInBackground(city);
+        return;
+      }
+
+      // 3) Llamada inicial
+      try {
+        if (!API_URL) throw new Error("API_URL no definida");
+        const url = new URL(API_URL);
+        if (city) url.searchParams.set("city", city);
+
+        const res = await fetchWithTimeout(
+          url.toString(),
+          { headers: { Accept: "application/json" } },
+          8000
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        /** @type {WeatherAirResponse} */
+        const data = await res.json();
+        writeCache(city, data);
+        renderBar(data);
+      } catch (e) {
+        console.error(e);
+        renderError();
+      }
+    }
+
+    /**
+     * Refresca caché en background (silencioso).
+     * @param {string | undefined} city
+     * @returns {Promise<void>}
+     */
+    async function refreshInBackground(city) {
+      try {
+        if (!API_URL) return;
+        const url = new URL(API_URL);
+        if (city) url.searchParams.set("city", city);
+        const res = await fetchWithTimeout(
+          url.toString(),
+          { headers: { Accept: "application/json" } },
+          8000
+        );
+        if (!res.ok) return;
+        /** @type {WeatherAirResponse} */
+        const data = await res.json();
+        writeCache(city, data);
+        renderBar(data);
+      } catch {
+        // silencio
+      }
+    }
+
+    // 🚀 Inicia
+    loadWeatherAir();
+  }
+</script>

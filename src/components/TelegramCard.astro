@@ -1,0 +1,23 @@
+---
+const TELEGRAM_BOT_URL = import.meta.env.PUBLIC_TELEGRAM_BOT_URL;
+const QR_CODE = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(TELEGRAM_BOT_URL)}`;
+
+
+---
+
+<div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center space-y-6">
+  <h3 class="text-xl font-semibold text-gray-800">
+    Suscribite al canal en Telegram
+  </h3>
+
+  <img src={QR_CODE} alt="QR del bot de Telegram" class="w-40 h-40 rounded-lg shadow" />
+
+  <a
+    href={TELEGRAM_BOT_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition"
+  >
+    Abrir en Telegram
+  </a>
+</div>

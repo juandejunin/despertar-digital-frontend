@@ -1,0 +1,16 @@
+---
+const mockNews = [
+  { title: "📈 Inflación interanual se estabiliza en el 6.8%", source: "Ministerio de Economía" },
+  { title: "🌤️ Temperaturas promedio más altas en el centro del país", source: "Servicio Meteorológico Nacional" },
+  { title: "💉 Nuevo informe sobre cobertura sanitaria nacional", source: "Ministerio de Salud" },
+];
+---
+
+<ul class="space-y-4">
+  {mockNews.map((n) => (
+    <li class="border-b border-gray-200 pb-3">
+      <h4 class="text-lg font-medium text-gray-900">{n.title}</h4>
+      <p class="text-sm text-gray-500">{n.source}</p>
+    </li>
+  ))}
+</ul>
