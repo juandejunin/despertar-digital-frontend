@@ -1,14 +1,15 @@
 ---
 /* 🌦️ WeatherBar.astro */
 const API_URL = import.meta.env.PUBLIC_API_URL;
-console.log('registerUrl:', API_URL);
+console.log("registerUrl:", API_URL);
 ---
 
 <div
   id="weather-bar"
   class="w-full bg-gradient-to-r from-blue-50 to-blue-100 text-gray-800 py-2 px-4
-         flex items-center justify-center text-sm shadow-sm border-b border-blue-200"
-  data-api-url={API_URL}  
+         flex flex-wrap items-center justify-center text-sm shadow-sm border-b border-blue-200
+         gap-x-3 gap-y-1 sm:gap-x-4 sm:text-base"
+  data-api-url={API_URL}
 >
   <span class="animate-pulse text-gray-500">Cargando clima…</span>
 </div>
@@ -147,26 +148,27 @@ console.log('registerUrl:', API_URL);
 
       const city = data?.location?.city || "—";
       const country = data?.location?.country || "";
-      const w = data?.weather || /** @type {Weather} */ ({});
-      const a = data?.air || /** @type {Air} */ ({});
+      const w = data?.weather || {};
+      const a = data?.air || {};
 
       const temp = formatNumber(w?.temperature, 0);
       const feels = formatNumber(w?.feels_like, 0);
       const hum = formatNumber(w?.humidity, 0);
       const wind = formatNumber(w?.wind_speed, 1);
-
       const aqiFormatted =
         a?.formatted ||
         (a?.aqi ? `${a.emoji || "🌫️"} ${a.label || "—"} (AQI ${a.aqi})` : "—");
 
       bar.innerHTML = `
-        <span class="mr-2">📍 <strong>${city}</strong>${country ? `, ${country}` : ""}</span>
-        <span class="mx-2">🌤️ ${w?.description ?? "—"}</span>
-        <span class="mx-2">🌡️ ${temp}°C <span class="text-gray-500">/ se siente ${feels}°C</span></span>
-        <span class="mx-2">💧 ${hum}%</span>
-        <span class="mx-2">💨 ${wind} m/s</span>
-        <span class="mx-2" title="Calidad del aire">${aqiFormatted}</span>
-      `;
+      <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-center">
+        <span>📍 <strong>${city}</strong>${country ? `, ${country}` : ""}</span>
+        <span>🌤️ ${w?.description ?? "—"}</span>
+        <span>🌡️ ${temp}°C <span class="text-gray-500">/ se siente ${feels}°C</span></span>
+        <span>💧 ${hum}%</span>
+        <span>💨 ${wind} m/s</span>
+        <span title="Calidad del aire">${aqiFormatted}</span>
+      </div>
+    `;
     }
 
     /**
