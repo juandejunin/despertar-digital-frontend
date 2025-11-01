@@ -1,0 +1,253 @@
+---
+// DolarCard.astro
+const API_URL = import.meta.env.PUBLIC_DOLAR_API_URL;
+---
+
+<div
+  id="dolar-card"
+  class="bg-white rounded-xl shadow-md p-5 border border-gray-100 
+         hover:shadow-lg transition-shadow flex flex-col min-h-32"
+  data-api-url={API_URL}
+>
+  <!-- Encabezado -->
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-bold text-gray-800">Dólar Hoy</h3>
+    <span id="dolar-time" class="text-xs text-gray-500 font-medium tracking-wide">
+      Cargando…
+    </span>
+  </div>
+
+  <!-- Contenido -->
+  <div id="dolar-content" class="space-y-2 flex-1">
+    <!-- Skeleton mejorado -->
+    <div class="animate-pulse space-y-2">
+      <div class="h-7 bg-gray-100 rounded-lg w-full"></div>
+      <div class="h-7 bg-gray-100 rounded-lg w-full"></div>
+      <div class="h-7 bg-gray-100 rounded-lg w-11/12"></div>
+      <div class="h-7 bg-gray-100 rounded-lg w-10/12"></div>
+    </div>
+  </div>
+
+  <!-- Botón -->
+  <div class="mt-3 text-right">
+    <button
+      id="dolar-refresh"
+      class="text-xs text-blue-600 hover:text-blue-800 underline opacity-0 transition-opacity"
+    >
+      Actualizar
+    </button>
+  </div>
+</div>
+
+<script type="module">
+  // @ts-check
+
+  /** @typedef {{ moneda: string; casa: string; nombre: string; compra: number; venta: number; fechaActualizacion: string }} DolarRate */
+
+  const card = document.getElementById("dolar-card");
+  const API_URL = card?.dataset.apiUrl;
+  const content = document.getElementById("dolar-content");
+  const timeEl = document.getElementById("dolar-time");
+  const refreshBtn = document.getElementById("dolar-refresh");
+
+  if (typeof window !== "undefined" && API_URL) {
+    const CACHE_TTL_MS = 5 * 60 * 1000;
+
+    /** @returns {string | undefined} */
+    const getCurrencyFromQuery = () => {
+      try {
+        const url = new URL(window.location.href);
+        const currency = url.searchParams.get("currency");
+        return currency ? currency.trim().toLowerCase() : undefined;
+      } catch {
+        return undefined;
+      }
+    };
+
+    /** @param {string | undefined} currency @returns {string} */
+    const cacheKey = (currency) => `dolar-rates:${currency || "all"}`;
+
+    /** @param {string | undefined} currency @returns {DolarRate[] | null} */
+    const readCache = (currency) => {
+      const raw = sessionStorage.getItem(cacheKey(currency));
+      if (!raw) return null;
+      try {
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts < CACHE_TTL_MS) return data;
+      } catch {}
+      return null;
+    };
+
+    /** @param {string | undefined} currency @param {DolarRate[]} data */
+    const writeCache = (currency, data) => {
+      sessionStorage.setItem(
+        cacheKey(currency),
+        JSON.stringify({ ts: Date.now(), data })
+      );
+    };
+
+    /** @param {number | string | undefined | null} n @param {number} [digits] @returns {string} */
+    const formatNumber = (n, digits = 0) => {
+      const num = Number(n);
+      if (Number.isNaN(num)) return "—";
+      return num.toLocaleString("es-AR", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      });
+    };
+
+    /** @param {string} casa @returns {string} */
+    const getEmojiForCasa = (casa) => {
+      /** @type {Record<string, string>} */
+      const map = {
+        oficial: "Oficial",
+        blue: "Blue",
+        bolsa: "Bolsa",
+        contadoconliqui: "Contado con liquidación",
+        mayorista: "Mayorista",
+        cripto: "Cripto",
+        tarjeta: "Tarjeta",
+      };
+      return map[casa] || "Dólar";
+    };
+
+    /** @param {string} url @param {RequestInit} [opts] @param {number} [timeoutMs] @returns {Promise<Response>} */
+    const fetchWithTimeout = (url, opts = {}, timeoutMs = 8000) => {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { ...opts, signal: controller.signal }).finally(() =>
+        clearTimeout(id)
+      );
+    };
+
+    // ← SOLO AQUÍ CAMBIAMOS EL HTML DE RENDER
+    /** @param {DolarRate[]} rates @param {string | undefined} selectedCasa */
+    const render = (rates, selectedCasa) => {
+      if (!content || !timeEl) return;
+
+      let displayRates = rates;
+      if (selectedCasa) {
+        const found = rates.find((r) => r.casa === selectedCasa);
+        displayRates = found ? [found] : [];
+      }
+
+      if (displayRates.length === 0) {
+        content.innerHTML = `<p class="text-sm text-red-600 text-center">Sin datos</p>`;
+        timeEl.textContent = "";
+        return;
+      }
+
+      // Hora más reciente
+      const latest = displayRates.reduce((a, b) =>
+        new Date(a.fechaActualizacion) > new Date(b.fechaActualizacion) ? a : b
+      );
+      timeEl.textContent = new Date(latest.fechaActualizacion).toLocaleTimeString("es-AR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      // ← MEJORAS VISUALES
+/** @type {Record<string, string>} */
+const nombreCorto = {
+  "Oficial": "Oficial",
+  "Blue": "Blue",
+  "Bolsa": "Bolsa",
+  "Contado con liquidación": "CCL",
+  "Mayorista": "Mayorista",
+  "Cripto": "Cripto",
+  "Tarjeta": "Tarjeta",
+};
+
+/** @type {Record<string, string>} */
+const colorFondo = {
+  oficial: "bg-gray-50",
+  blue: "bg-emerald-50",
+  bolsa: "bg-amber-50",
+  contadoconliqui: "bg-indigo-50",
+  mayorista: "bg-cyan-50",
+  cripto: "bg-purple-50",
+  tarjeta: "bg-rose-50",
+};
+      content.innerHTML = displayRates
+        .map((rate) => {
+          const compraDigits = rate.compra % 1 !== 0 ? 1 : 0;
+          const ventaDigits = rate.venta % 1 !== 0 ? 1 : 0;
+          const compra = formatNumber(rate.compra, compraDigits);
+          const venta = formatNumber(rate.venta, ventaDigits);
+          const nombre = nombreCorto[rate.nombre] || rate.nombre;
+          const bg = colorFondo[rate.casa] || "bg-gray-50";
+
+          return `
+            <div class="${bg} rounded-lg px-3 py-2 flex justify-between items-center text-sm">
+              <span class="font-semibold text-gray-700">${nombre}</span>
+              <span class="font-medium">
+                <span class="text-green-700">C $${compra}</span>
+                <span class="text-gray-400 mx-1">/</span>
+                <span class="text-red-700">V $${venta}</span>
+              </span>
+            </div>
+          `;
+        })
+        .join("");
+
+      if (refreshBtn) refreshBtn.classList.remove("opacity-0");
+    };
+
+    /** @param {string} [msg] */
+    const renderError = (msg = "No se pudo cargar") => {
+      if (content)
+        content.innerHTML = `<p class="text-xs text-red-600">${msg}</p>`;
+      if (timeEl) timeEl.textContent = "";
+    };
+
+    // ← IIFE ORIGINAL (sin cambios)
+    (async () => {
+      const selectedCasa = getCurrencyFromQuery();
+      const cached = readCache(selectedCasa);
+
+      if (cached) {
+        render(cached, selectedCasa);
+        setTimeout(() => refresh(selectedCasa), 1000);
+        return;
+      }
+
+      try {
+        const res = await fetchWithTimeout(
+          API_URL,
+          { headers: { Accept: "application/json" } },
+          8000
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        writeCache(selectedCasa, data);
+        render(data, selectedCasa);
+      } catch (e) {
+        console.error(e);
+        renderError();
+      }
+    })();
+
+    /** @param {string | undefined} selectedCasa */
+    const refresh = async (selectedCasa) => {
+      try {
+        const res = await fetchWithTimeout(
+          API_URL,
+          { headers: { Accept: "application/json" } },
+          8000
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        writeCache(selectedCasa, data);
+        render(data, selectedCasa);
+      } catch {}
+    };
+
+    // Botón refresh
+    refreshBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      refreshBtn.classList.add("opacity-0");
+      const selectedCasa = getCurrencyFromQuery();
+      refresh(selectedCasa);
+    });
+  }
+</script>

@@ -1,0 +1,19 @@
+---
+// src/components/DashboardCards.astro
+import WeatherCard from "./WeatherCard.astro";
+import TelegramCard from "./TelegramCard.astro";
+
+
+import DolarCard from "./DolarCard.astro";
+
+
+---
+
+<div class="max-w-6xl mx-auto px-4 grid gap-6 
+            grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  <WeatherCard />
+  <TelegramCard />
+  
+  <!-- Podés agregar más tarjetas aquí -->
+  <DolarCard /> <!-- ← Muestra todos -->
+</div>
