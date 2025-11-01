@@ -1,0 +1,187 @@
+---
+// DolarBar.astro
+const API_URL =
+  import.meta.env.PUBLIC_DOLAR_API_URL ||
+  "http://localhost:3000/api/dolares";
+---
+
+<div
+  id="dolar-bar"
+  class="w-full bg-gradient-to-r from-green-50 to-emerald-100 text-gray-800 py-2 px-4
+         flex flex-wrap items-center justify-center text-sm shadow-sm border-b border-green-200
+         gap-x-3 gap-y-1 sm:gap-x-4 sm:text-base"
+  data-api-url={API_URL}
+>
+  <span class="animate-pulse text-gray-500">Cargando dólar…</span>
+</div>
+
+<script type="module">
+  // @ts-check
+
+  /** @typedef {{ moneda: string; casa: string; nombre: string; compra: number; venta: number; fechaActualizacion: string }} DolarRate */
+
+  const bar = document.getElementById("dolar-bar");
+  const API_URL = bar?.dataset.apiUrl;
+
+  if (typeof window !== "undefined" && API_URL) {
+    const CACHE_TTL_MS = 5 * 60 * 1000;
+
+    /** @returns {string | undefined} */
+    const getCurrencyFromQuery = () => {
+      try {
+        const url = new URL(window.location.href);
+        const currency = url.searchParams.get("currency");
+        return currency ? currency.trim().toLowerCase() : undefined;
+      } catch {
+        return undefined;
+      }
+    };
+
+    /** @param {string | undefined} currency @returns {string} */
+    const cacheKey = (currency) => `dolar-rates:${currency || "all"}`;
+
+    /** @param {string | undefined} currency @returns {DolarRate[] | null} */
+    const readCache = (currency) => {
+      const raw = sessionStorage.getItem(cacheKey(currency));
+      if (!raw) return null;
+      try {
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts < CACHE_TTL_MS) return data;
+      } catch {}
+      return null;
+    };
+
+    /** @param {string | undefined} currency @param {DolarRate[]} data */
+    const writeCache = (currency, data) => {
+      sessionStorage.setItem(
+        cacheKey(currency),
+        JSON.stringify({ ts: Date.now(), data })
+      );
+    };
+
+    /** @param {number | string | undefined | null} n @param {number} [digits] @returns {string} */
+    const formatNumber = (n, digits = 0) => {
+      const num = Number(n);
+      if (Number.isNaN(num)) return "—";
+      return num.toLocaleString("es-AR", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      });
+    };
+
+    /** @param {string} casa @returns {string} */
+    const getEmojiForCasa = (casa) => {
+      /** @type {Record<string, string>} */
+      const map = {
+        oficial: "Oficial",
+        blue: "Blue",
+        bolsa: "Bolsa",
+        contadoconliqui: "Contado con liquidación",
+        mayorista: "Mayorista",
+        cripto: "Cripto",
+        tarjeta: "Tarjeta",
+      };
+      return map[casa] || "Dólar"; // ← TypeScript feliz
+    };
+
+    /** @param {string} url @param {RequestInit} [opts] @param {number} [timeoutMs] @returns {Promise<Response>} */
+    const fetchWithTimeout = (url, opts = {}, timeoutMs = 8000) => {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { ...opts, signal: controller.signal }).finally(() =>
+        clearTimeout(id)
+      );
+    };
+
+    /** @param {DolarRate[]} rates @param {string | undefined} selectedCasa */
+    const renderBar = (rates, selectedCasa) => {
+      if (!bar) return;
+
+      let displayRates = rates;
+      if (selectedCasa) {
+        const found = rates.find((r) => r.casa === selectedCasa);
+        displayRates = found ? [found] : [];
+      }
+
+      if (displayRates.length === 0) {
+        bar.innerHTML = `<span class="text-red-600 text-xs">No hay datos</span>`;
+        return;
+      }
+
+      const items = displayRates
+        .map((rate) => {
+          const compraDigits = rate.compra % 1 !== 0 ? 1 : 0;
+          const ventaDigits = rate.venta % 1 !== 0 ? 1 : 0;
+          const compra = formatNumber(rate.compra, compraDigits);
+          const venta = formatNumber(rate.venta, ventaDigits);
+          const time = new Date(rate.fechaActualizacion).toLocaleTimeString(
+            "es-AR",
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+            }
+          );
+          const emoji = getEmojiForCasa(rate.casa);
+
+          return `<span class="flex items-center gap-1">
+          ${emoji} <strong>${rate.nombre}</strong>: 
+          <span class="text-green-700">C ${compra}</span> / 
+          <span class="text-red-700">V ${venta}</span>
+          <span class="text-gray-500 text-xs">(${time})</span>
+        </span>`;
+        })
+        .join("");
+
+      bar.innerHTML = `<div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-center">${items}</div>`;
+    };
+
+    /** @param {string} [msg] */
+    const renderError = (msg = "No se pudo cargar el dólar") => {
+      if (bar)
+        bar.innerHTML = `<span class="text-red-600 text-xs">${msg}</span>`;
+    };
+
+    // IIFE para async
+    (async () => {
+      const selectedCasa = getCurrencyFromQuery();
+      const cached = readCache(selectedCasa);
+
+      if (cached) {
+        renderBar(cached, selectedCasa);
+        // Refrescar en background
+        setTimeout(() => refreshInBackground(selectedCasa), 1000);
+        return;
+      }
+
+      try {
+        const res = await fetchWithTimeout(
+          API_URL,
+          { headers: { Accept: "application/json" } },
+          8000
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        writeCache(selectedCasa, data);
+        renderBar(data, selectedCasa);
+      } catch (e) {
+        console.error(e);
+        renderError();
+      }
+    })();
+
+    /** @param {string | undefined} selectedCasa */
+    const refreshInBackground = async (selectedCasa) => {
+      try {
+        const res = await fetchWithTimeout(
+          API_URL,
+          { headers: { Accept: "application/json" } },
+          8000
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        writeCache(selectedCasa, data);
+        renderBar(data, selectedCasa);
+      } catch {}
+    };
+  }
+</script>

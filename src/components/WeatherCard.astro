@@ -1,14 +1,13 @@
 ---
 /* 🌦️ WeatherBar.astro */
 const API_URL = import.meta.env.PUBLIC_API_URL;
-console.log("registerUrl:", API_URL);
 ---
 
 <div
   id="weather-bar"
-  class="w-full bg-gradient-to-r from-blue-50 to-blue-100 text-gray-800 py-2 px-4
-         flex flex-wrap items-center justify-center text-sm shadow-sm border-b border-blue-200
-         gap-x-3 gap-y-1 sm:gap-x-4 sm:text-base"
+ class="bg-white rounded-xl shadow-md p-5 border border-gray-100 
+         hover:shadow-lg transition-shadow
+         flex flex-col justify-center min-h-32"
   data-api-url={API_URL}
 >
   <span class="animate-pulse text-gray-500">Cargando clima…</span>
@@ -46,7 +45,7 @@ console.log("registerUrl:", API_URL);
 
   const bar = document.getElementById("weather-bar");
   const API_URL = bar?.dataset.apiUrl;
-  console.log("registerUrl:", API_URL);
+  
 
   if (typeof window !== "undefined") {
     /**

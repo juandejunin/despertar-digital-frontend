@@ -1,30 +1,20 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/NavBar.astro";
-import TelegramCard from "../components/TelegramCard.astro";
+
 import NewsFeed from "../components/NewsFeed.astro";
-import WeatherCard from "../components/WeatherCard.astro";
+
+import DashboardCards from "../components/DashboardCards.astro";
+
 ---
 
 <Layout>
   <NavBar />
-  <!-- Tarjeta del clima -->
-  <WeatherCard />
+  
 
-  <!-- Sección principal -->
-  <section
-    class="flex flex-col items-center justify-center text-center py-16 bg-gray-50"
-  >
-    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">
-      Despertar Digital
-    </h2>
-
-    <p class="text-gray-600 max-w-2xl mb-10 text-lg">
-      Solo datos, sin relatos. Noticias automatizadas, libres de interpretación.
-    </p>
-
-    <!-- Tarjeta con QR y botón de Telegram -->
-    <TelegramCard />
+  <!-- Contenedor de tarjetas -->
+  <section class="py-16 bg-gray-50">
+    <DashboardCards />
   </section>
 
   <!-- Sección de titulares -->
