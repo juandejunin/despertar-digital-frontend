@@ -1,20 +1,63 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/NavBar.astro";
-import WeatherCard from "../components/WeatherCard.astro";
+import ForecastCard from "../components/ForecastCard.astro"; // 👈 cambiado el import
+
+interface WeatherLocation {
+  ip: string;
+  city: string;
+  country: string;
+}
+
+interface ForecastItem {
+  time: string;
+  timestamp: number;
+  description: string;
+  temperature: number;
+  feels_like: number;
+  humidity: number;
+  wind_speed: number;
+  wind_deg: number;
+}
+
+interface WeatherData {
+  location: WeatherLocation;
+  city: string;
+  forecast: ForecastItem[];
+  today: boolean;
+}
+
+const API_URL = import.meta.env.PUBLIC_WEATHER_API_URL
+
+const response = await fetch(API_URL);
+if (!response.ok) throw new Error(`Error al obtener datos del clima: ${response.status}`);
+const weatherData: WeatherData = await response.json();
 ---
 
 <Layout>
   <NavBar />
 
-  <!-- Tarjeta de clima de prueba -->
-  <WeatherCard />
-  <section
-    class="flex flex-col items-center justify-center text-center py-16 bg-gray-50"
-  >
-    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">Clima</h2>
-    <p class="text-gray-600 max-w-2xl mb-10 text-lg">
-      Esta sección está en desarrollo.
+  <section class="flex flex-col items-center py-16 bg-gradient-to-b from-gray-50 to-gray-100">
+    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-3">
+      Clima en {weatherData.city}
+    </h2>
+
+    <p class="text-gray-600 mb-12 text-lg">
+      Pronóstico extendido para las próximas horas.
     </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-6">
+      {weatherData.forecast.map((item: ForecastItem) => (
+        <ForecastCard
+          time={item.time}
+          description={item.description}
+          temperature={item.temperature}
+          feels_like={item.feels_like}
+          humidity={item.humidity}
+          wind_speed={item.wind_speed}
+          wind_deg={item.wind_deg}
+        />
+      ))}
+    </div>
   </section>
 </Layout>
