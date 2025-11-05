@@ -1,22 +1,39 @@
 ---
 // src/pages/clima.astro
----
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Tu ubicación</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
-  <div id="app" class="text-center p-8 bg-white rounded-xl shadow-lg">
-    <p class="text-lg text-gray-600">Detectando tu ciudad...</p>
-  </div>
+import Layout from "../layouts/Layout.astro";
+import NavBar from "../components/NavBar.astro";
 
+// Valor inicial (se sobrescribe en cliente)
+let city = "Cargando...";
+---
+
+<Layout title="Clima en tu ciudad">
+  <NavBar />
+
+  <!-- Contenido principal -->
+  <section class="py-16 bg-gradient-to-br from-sky-50 to-blue-100">
+    <div class="max-w-md mx-auto px-6 text-center">
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+        <p class="text-4xl font-bold text-blue-700" id="city-text">
+          Tu ciudad: {city}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script del cliente: llama a la API y actualiza -->
   <script type="module">
-    const app = document.getElementById("app");
-    const { city } = await (await fetch("https://despertardigital.es/api/geo")).json();
-    app.innerHTML = `<p class="text-3xl font-bold text-indigo-600">Tu ciudad: ${city}</p>`;
+    const cityText = document.getElementById("city-text");
+
+    try {
+      const res = await fetch("https://despertardigital.es/api/weather/forecast");
+      const data = await res.json();
+      const city = data.city || "Desconocida";
+
+      cityText.textContent = `Tu ciudad: ${city}`;
+    } catch (error) {
+      cityText.textContent = "Error al detectar ciudad";
+      cityText.classList.add("text-red-600");
+    }
   </script>
-</body>
-</html>
+</Layout>
