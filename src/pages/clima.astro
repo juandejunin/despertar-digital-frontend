@@ -1,39 +1,16 @@
 ---
-// src/pages/clima.astro
 import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/NavBar.astro";
-
-// Valor inicial (se sobrescribe en cliente)
-let city = "Cargando...";
+import WeatherIsland from "../components/WeatherIsland.jsx";
 ---
 
 <Layout title="Clima en tu ciudad">
   <NavBar />
 
-  <!-- Contenido principal -->
   <section class="py-16 bg-gradient-to-br from-sky-50 to-blue-100">
-    <div class="max-w-md mx-auto px-6 text-center">
-      <div class="bg-white rounded-2xl shadow-xl p-10">
-        <p class="text-4xl font-bold text-blue-700" id="city-text">
-          Tu ciudad: {city}
-        </p>
-      </div>
+    <div class="max-w-5xl mx-auto px-6">
+      <!-- Isla: renderiza en cliente -->
+      <WeatherIsland client:load />
     </div>
   </section>
-
-  <!-- Script del cliente: llama a la API y actualiza -->
-  <script type="module">
-    const cityText = document.getElementById("city-text");
-
-    try {
-      const res = await fetch("https://despertardigital.es/api/weather/forecast");
-      const data = await res.json();
-      const city = data.city || "Desconocida";
-
-      cityText.textContent = `Tu ciudad: ${city}`;
-    } catch (error) {
-      cityText.textContent = "Error al detectar ciudad";
-      cityText.classList.add("text-red-600");
-    }
-  </script>
 </Layout>
