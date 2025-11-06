@@ -5,30 +5,24 @@ const API_URL = import.meta.env.PUBLIC_DOLAR_API_URL;
 
 <div
   id="dolar-card"
-  class="bg-white rounded-xl shadow-md p-5 border border-gray-100 
-         hover:shadow-lg transition-shadow flex flex-col min-h-32"
+  class="bg-white rounded-xl shadow-md p-5 border border-gray-100
+         hover:shadow-lg transition-shadow flex flex-col w-full max-w-md min-h-[360px]"
   data-api-url={API_URL}
 >
-  <!-- Encabezado -->
   <div class="flex items-center justify-between mb-4">
-    <h3 class="text-lg font-bold text-gray-800">Dólar Hoy</h3>
+    <h3 class="text-lg font-bold text-gray-800">Economía</h3>
     <span id="dolar-time" class="text-xs text-gray-500 font-medium tracking-wide">
       Cargando…
     </span>
   </div>
 
-  <!-- Contenido -->
-  <div id="dolar-content" class="space-y-2 flex-1">
-    <!-- Skeleton mejorado -->
+  <div id="dolar-content" class="flex-1 space-y-2">
     <div class="animate-pulse space-y-2">
       <div class="h-7 bg-gray-100 rounded-lg w-full"></div>
-      <div class="h-7 bg-gray-100 rounded-lg w-full"></div>
-      <div class="h-7 bg-gray-100 rounded-lg w-11/12"></div>
       <div class="h-7 bg-gray-100 rounded-lg w-10/12"></div>
     </div>
   </div>
 
-  <!-- Botón -->
   <div class="mt-3 text-right">
     <button
       id="dolar-refresh"

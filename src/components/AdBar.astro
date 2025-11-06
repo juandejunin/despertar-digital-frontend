@@ -1,0 +1,10 @@
+---
+// AdBar.astro
+// Componente para mostrar un espacio publicitario
+// Props opcionales para altura y texto
+const { height = "h-24", text = "Espacio publicitario" } = Astro.props;
+---
+
+<div class={`bg-gray-200 w-full flex items-center justify-center ${height} text-gray-700 text-sm font-medium`}>
+  {text}
+</div>

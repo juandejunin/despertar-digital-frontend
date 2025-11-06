@@ -1,4 +1,7 @@
 ---
+import AdBar from '../components/AdBar.astro';
+import InfoBar from '../components/InfoBar.astro';
+import NavBar from '../components/NavBar.astro';
 import '../styles/global.css';
 ---
 
@@ -11,6 +14,9 @@ import '../styles/global.css';
     <slot name="head" />
   </head>
   <body class="font-sans text-gray-900 min-h-screen bg-gray-50 flex flex-col">
+    <AdBar height="h-28" text="Tu anuncio aquí" />
+     <NavBar />
+     <InfoBar lastUpdate="12:27" /> <!-- Fecha y última actualización -->
     <slot />
     <footer class="mt-auto text-center py-6 text-sm text-gray-500 border-t">
       © {new Date().getFullYear()} Despertar Digital — Solo datos, sin relatos.

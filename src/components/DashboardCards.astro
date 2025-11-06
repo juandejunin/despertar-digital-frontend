@@ -1,22 +1,13 @@
 ---
-// src/components/DashboardCards.astro
 import WeatherCard from "./WeatherCard.astro";
-import TelegramCard from "./TelegramCard.astro";
-
-
 import DolarCard from "./DolarCard.astro";
-
 import SportsCard from "./SportsCard.astro";
 
-
+const TODAY_API = import.meta.env.PUBLIC_API_URL + "/weather/today-air";
 ---
 
-<div class="max-w-6xl mx-auto px-4 grid gap-6 
-            grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-  <WeatherCard />
-  <TelegramCard />
-  
-  <!-- Podés agregar más tarjetas aquí -->
-  <DolarCard /> <!-- ← Muestra todos -->
+<section class="py-16 bg-gray-50 flex flex-wrap justify-center gap-6">
+  <WeatherCard apiUrl={TODAY_API} />
+  <DolarCard />
   <SportsCard />
-</div>
+</section>

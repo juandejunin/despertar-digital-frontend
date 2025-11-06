@@ -1,16 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/NavBar.astro";
-import WeatherIsland from "../components/WeatherIsland.jsx";
+import CitySearchIsland from "../islands/CitySearchIsland.jsx";
 ---
 
 <Layout title="Clima en tu ciudad">
-  <NavBar />
+ 
 
   <section class="py-16 bg-gradient-to-br from-sky-50 to-blue-100">
-    <div class="max-w-5xl mx-auto px-6">
-      <!-- Isla: renderiza en cliente -->
-      <WeatherIsland client:load />
-    </div>
+    <h2 class="text-3xl font-bold text-center text-blue-800 mb-8">
+      Consulta el clima en cualquier ciudad
+    </h2>
+    <CitySearchIsland client:load apiBase="https://despertardigital.es/api" />
+
   </section>
 </Layout>

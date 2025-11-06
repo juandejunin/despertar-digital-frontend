@@ -1,19 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import NavBar from "../components/NavBar.astro";
 
 import NewsFeed from "../components/NewsFeed.astro";
-
 import DashboardCards from "../components/DashboardCards.astro";
-
+import LocationButtonIsland from "../islands/LocationButtonIsland.tsx";
 ---
 
-<Layout>
-  <NavBar />
-  
 
-  <!-- Contenedor de tarjetas -->
-  <section class="py-16 bg-gray-50">
+<Layout>
+    <!-- Contenedor de tarjetas -->
+  <section class=" bg-gray-50">
     <DashboardCards />
   </section>
 
@@ -25,3 +21,4 @@ import DashboardCards from "../components/DashboardCards.astro";
     </div>
   </section>
 </Layout>
+
