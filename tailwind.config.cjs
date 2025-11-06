@@ -1,4 +1,3 @@
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -9,22 +8,25 @@ module.exports = {
 
   theme: {
     extend: {
-      // Puedes extender colores, fuentes, etc. aquí
+      fontFamily: {
+        serifSystem: [
+          "Georgia",
+          "Cambria",
+          '"Times New Roman"',
+          "Times",
+          "serif",
+        ],
+      },
     },
   },
 
   plugins: [],
 
-  // ← CLAVE: Elimina -webkit-text-size-adjust
   corePlugins: {
-    preflight: true, // Mantiene reset básico
+    preflight: true,
   },
 
-  // ← OPCIONAL: Mejora para Astro + Preact
   future: {
     hoverOnlyWhenSupported: true,
   },
-
-  // ← OPCIONAL: Si querés prefijo (ej: tw-)
-  // prefix: 'tw-',
 };
