@@ -16,9 +16,11 @@ export default function LocationButtonIsland({
 
   const fetchCityByCoords = async (lat: number, lon: number) => {
     try {
-      const res = await fetch(
-        `${apiBase}/config/location/city?lat=${lat}&lon=${lon}`
-      );
+      // 🔒 Normalizamos apiBase
+      const cleanBase = apiBase.replace(/\/+$/, ""); // quita barras finales
+      const url = `${cleanBase}/config/location/city?lat=${lat}&lon=${lon}`;
+
+      const res = await fetch(url);
       if (!res.ok) throw new Error(`Error: ${res.statusText}`);
       const data = await res.json();
 
@@ -37,7 +39,6 @@ export default function LocationButtonIsland({
         throw new Error("Ciudad no encontrada");
       }
     } catch (err) {
-      console.error("Error obteniendo ciudad:", err);
       setMessage("⚠️ No se pudo obtener la ubicación.");
     } finally {
       setLoading(false);
