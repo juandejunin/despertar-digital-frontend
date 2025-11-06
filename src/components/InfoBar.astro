@@ -1,0 +1,23 @@
+---
+// InfoBar.astro
+const now = new Date();
+
+// Fecha actual
+const dateOptions: Intl.DateTimeFormatOptions = {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+};
+const formattedDate = now.toLocaleDateString("es-ES", dateOptions);
+
+// Última actualización (hora actual)
+const timeOptions: Intl.DateTimeFormatOptions = {
+  hour: "2-digit",
+  minute: "2-digit",
+};
+const formattedTime = now.toLocaleTimeString("es-ES", timeOptions);
+---
+
+<div class="w-full bg-gray-100 text-gray-600 text-xs flex justify-center py-1 px-2">
+  <span>{formattedDate} | actualizado {formattedTime}</span>
+</div>
