@@ -132,9 +132,9 @@ export default function WeatherCard({ apiUrl, city }: Props) {
   const { location, weather, air } = data;
 
   return (
-    <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex flex-col gap-2 text-center min-h-32">
+    <div class="bg-slate-200 rounded-xl shadow-md p-5 border border-gray-100 flex flex-col gap-2 text-center min-h-32">
       <div class="font-semibold text-lg">
-        📍 {location.city}
+         {location.city}
         {location.country ? `, ${location.country}` : ""}
       </div>
       <div>🌤️ {weather.description}</div>

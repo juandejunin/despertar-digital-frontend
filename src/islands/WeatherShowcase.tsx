@@ -87,7 +87,7 @@ export default function WeatherShowcase({ apiUrl }: Props) {
       >
         <WeatherCard apiUrl={apiUrl} city={currentCity} />
         <p class="text-sm text-gray-500 text-center mt-2">
-          {currentCity === userCity ? "📍 Tu ciudad" : `🌍 ${currentCity}`}
+          {currentCity === userCity ? "Tu ciudad" : `🌍 ${currentCity}`}
         </p>
       </div>
 
