@@ -3,15 +3,17 @@
 ---
 
 
-<nav class="j75-nav fixed w-full bg-gradient-to-r from-[#ffffff] via-[#ffffff] to-[#ffffff] text-astro-white z-50 flex items-center justify-between p-6">
+<nav class="j75-nav  fixed w-full bg-despertar-dark text-astro-white z-50 flex items-center justify-between p-6">
   <!-- Logo -->
-<h1 class="text-2xl font-system font-bold text-gray-900">Despertar Digital</h1>
-
+  <div class="text-2xl font-bold font-inconsolata text-white">
+    <a href="index.html">Despertar Digital<span class="text-astro-primary-orange">.</span></a>
+  </div>
 
   <!-- Ícono de hamburguesa personalizado -->
+
   <button
     id="j75-nav-toggle"
-    class="md:hidden focus:outline-none relative z-[60]"
+    class="md:hidden focus:outline-none relative z-[60] text-white"
     aria-label="Toggle menu"
   >
     <div class="hamburger-icon">
@@ -24,13 +26,13 @@
   <!-- Overlay con transición -->
   <div
     id="overlay"
-    class="fixed inset-0 bg-astro-secondary-dark bg-opacity-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out z-40"
+    class="fixed inset-0 bg-despertar-dark  opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out z-40"
   ></div>
 
   <!-- Menú lateral -->
   <div
     id="mobile-menu"
-    class="fixed inset-y-0 right-0 w-0 pt-14 bg-astro-primary-dark text-astro-white transition-all duration-300 ease-in-out overflow-hidden md:hidden z-50"
+    class="fixed inset-y-0 left-0 w-0 pt-14 bg-astro-primary-dark text-white text-xl transition-all duration-300 ease-in-out overflow-hidden md:hidden z-50"
   >
     <div class="p-4 flex flex-col h-full">
       <ul class="space-y-4 mt-4 flex-grow">
@@ -43,11 +45,11 @@
   </div>
 
   <!-- Menú desktop -->
-  <ul class="hidden md:flex space-x-6 text-2xl">
-    <li><a href="/" class="nav-link hover:text-astro-secondary-light">Inicio</a></li>
-    <li><a href="/noticias" class="nav-link hover:text-astro-secondary-light">Noticias</a></li>
-    <li><a href="/clima" class="nav-link hover:text-astro-secondary-light">Clima</a></li>
-    <li><a href="/contacto" class="nav-link hover:text-astro-secondary-light">Contacto</a></li>
+  <ul class="hidden md:flex space-x-6 text-2xl text-white">
+        <li><a href="/" class="nav-link block hover:text-astro-secondary-light">Inicio</a></li>
+        <li><a href="/noticias" class="nav-link block hover:text-astro-secondary-light">Noticias</a></li>
+        <li><a href="/clima" class="nav-link block hover:text-astro-secondary-light">Clima</a></li>
+        <li><a href="/contacto" class="nav-link block hover:text-astro-secondary-light">Contacto</a></li>
   </ul>
 </nav>
 
@@ -83,7 +85,7 @@
 
   /* Estilos para las líneas del ícono de hamburguesa */
   #j75-nav-toggle .hamburger-icon .line {
-    background-color: #000000; /* Usamos blanco directo ya que Tailwind no aplica aquí */
+    background-color: #fff; /* Usamos blanco directo ya que Tailwind no aplica aquí */
     height: 3px;
     margin: 4px 0;
     transition:

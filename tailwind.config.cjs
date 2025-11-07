@@ -17,6 +17,10 @@ module.exports = {
           "serif",
         ],
       },
+
+      colors: {
+        "despertar-dark": "#161617",
+      },
     },
   },
 
