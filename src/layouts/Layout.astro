@@ -1,8 +1,8 @@
 ---
-import AdBar from '../components/AdBar.astro';
-import InfoBar from '../components/InfoBar.astro';
-import NavBar from '../components/NavBar.astro';
-import '../styles/global.css';
+import Footer from "../components/Footer.astro";
+import InfoBar from "../components/InfoBar.astro";
+import NavBar from "../components/NavBar.astro";
+import "../styles/global.css";
 ---
 
 <html lang="es" class="scroll-smooth">
@@ -10,16 +10,31 @@ import '../styles/global.css';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Despertar Digital</title>
-    <meta name="description" content="Solo datos, sin relatos. Noticias automatizadas y objetivas." />
+    <meta
+      name="description"
+      content="Solo datos, sin relatos. Noticias automatizadas y objetivas."
+    />
     <slot name="head" />
   </head>
- <body class="font-serifSystem text-gray-900">
-    <AdBar height="h-28" text="Tu anuncio aquí" />
-     <NavBar />
-     <InfoBar lastUpdate="12:27" /> <!-- Fecha y última actualización -->
-    <slot />
-    <footer class="mt-auto text-center py-6 text-sm text-gray-500 border-t">
-      © {new Date().getFullYear()} Despertar Digital — Solo datos, sin relatos.
-    </footer>
+  <body class="font-serifSystem text-gray-900  min-h-screen flex flex-col bg-gray-300">
+    
+    <!-- === CABECERA FIJA === -->
+    <!-- NavBar (fijo arriba) -->
+    <div class="fixed top-0 left-0 w-full z-50">
+      <NavBar />
+    </div>
+
+    <!-- InfoBar (fijo debajo del nav) -->
+    <div class="fixed top-20 left-0 w-full z-40"> <!-- top-20 = 80px (NavBar ~72px) -->
+      <InfoBar lastUpdate="12:27" />
+    </div>
+
+    <!-- === CONTENIDO PRINCIPAL === -->
+    <main class="flex-1 pt-32"> <!-- 128px = NavBar (72) + InfoBar (~40) + margen -->
+      <slot />
+    </main>
+
+    <!-- === FOOTER === -->
+    <Footer />
   </body>
 </html>
