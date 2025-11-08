@@ -16,24 +16,44 @@ import "../styles/global.css";
       content="Solo datos, sin relatos. Noticias automatizadas y objetivas."
     />
     <slot name="head" />
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK"
+    ></script>
+    <script>
+      {
+        `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Solo activar GA si el usuario aceptó cookies
+      const consent = localStorage.getItem("cookieConsent");
+      if (consent === "all") {
+        gtag('config', 'G-XX7WSF51QK');
+      }
+    `;
+      }
+    </script>
   </head>
-  <body class="font-serifSystem text-gray-900  min-h-screen flex flex-col bg-gray-300">
-    
-   <CookieConsent client:load />
+  <body
+    class="font-serifSystem text-gray-900 min-h-screen flex flex-col bg-gray-300"
+  >
+    <CookieConsent client:load />
 
     <!-- NavBar (fijo arriba) -->
     <div class="fixed top-0 left-0 w-full z-50">
       <NavBar />
     </div>
 
-
     <!-- InfoBar (fijo debajo del nav) -->
-    <div class="fixed top-20 left-0 w-full z-40"> <!-- top-20 = 80px (NavBar ~72px) -->
+    <div class="fixed top-20 left-0 w-full z-40">
+      <!-- top-20 = 80px (NavBar ~72px) -->
       <InfoBar lastUpdate="12:27" />
     </div>
 
     <!-- === CONTENIDO PRINCIPAL === -->
-    <main class="flex-1 pt-32"> <!-- 128px = NavBar (72) + InfoBar (~40) + margen -->
+    <main class="flex-1 pt-32">
+      <!-- 128px = NavBar (72) + InfoBar (~40) + margen -->
       <slot />
     </main>
 
