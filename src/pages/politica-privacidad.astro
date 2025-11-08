@@ -1,0 +1,153 @@
+---
+import Layout from "../layouts/layout.astro";
+---
+
+<Layout>
+  <main class="bg-[#161617] text-gray-100 min-h-screen px-6 py-12 flex flex-col items-center">
+    <div class="max-w-3xl w-full space-y-8">
+      <h1 class="text-3xl font-bold text-green-400 text-center mb-4">
+        Política de Privacidad
+      </h1>
+
+      <p class="text-gray-300 text-sm text-center">
+        Última actualización: Noviembre 2025
+      </p>
+
+      <section class="space-y-4">
+        <p>
+          En <strong>Despertar Digital</strong> valoramos y respetamos tu
+          privacidad. Esta política explica cómo recopilamos, usamos y
+          protegemos tu información personal cuando visitas nuestro sitio web,
+          utilizas nuestros formularios o accedes a nuestros servicios.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-semibold text-green-400">
+          1. Información que recopilamos
+        </h2>
+        <ul class="list-disc list-inside space-y-1 text-gray-300">
+          <li>Datos de contacto: nombre, correo electrónico, etc.</li>
+          <li>Información técnica: IP, navegador, sistema operativo, páginas visitadas.</li>
+          <li>Datos de uso y analítica, mediante herramientas como Google Analytics.</li>
+          <li>Información opcional proporcionada en formularios o durante el registro.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-semibold text-green-400">
+          2. Uso de la información
+        </h2>
+        <ul class="list-disc list-inside space-y-1 text-gray-300">
+          <li>Mejorar el contenido y funcionamiento del sitio.</li>
+          <li>Personalizar la experiencia del usuario y mostrar contenido relevante.</li>
+          <li>Enviar información sobre servicios o novedades, si así lo aceptas.</li>
+          <li>Analizar el tráfico y rendimiento del sitio mediante Google Analytics.</li>
+          <li>Mostrar anuncios personalizados a través de Google AdSense u otros socios publicitarios.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-semibold text-green-400">
+          3. Uso de cookies
+        </h2>
+        <p class="text-gray-300">
+          Este sitio utiliza cookies propias y de terceros para almacenar y acceder a información con el fin de:
+        </p>
+        <ul class="list-disc list-inside space-y-1 text-gray-300">
+          <li>Garantizar el funcionamiento técnico del sitio.</li>
+          <li>Medir y analizar el tráfico.</li>
+          <li>Ofrecer anuncios personalizados.</li>
+        </ul>
+        <p class="text-gray-300">
+          Puedes aceptar, rechazar o configurar tus preferencias de cookies directamente desde aquí:
+        </p>
+
+        <!-- Botones de consentimiento -->
+        <div class="flex justify-center gap-3 mt-4 flex-wrap">
+          <button
+            class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full transition"
+            onClick={() => {
+              localStorage.setItem("cookieConsent", "all");
+              window.location.reload();
+            }}
+          >
+            Aceptar todo
+          </button>
+          <button
+            class="bg-gray-700 hover:bg-gray-600 text-gray-100 px-5 py-2 rounded-full transition"
+            onClick={() => {
+              localStorage.setItem("cookieConsent", "none");
+              window.location.reload();
+            }}
+          >
+            Rechazar todo
+          </button>
+        </div>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-semibold text-green-400">
+          4. Publicidad y socios de datos
+        </h2>
+        <p class="text-gray-300">
+          Trabajamos con Google y otros proveedores publicitarios para mostrar anuncios personalizados.
+          Estos socios pueden usar cookies y tecnologías similares para recopilar información sobre tu actividad
+          en este y otros sitios.
+        </p>
+        <p class="text-gray-300">
+          Más información en 
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            target="_blank"
+            rel="noopener"
+            class="text-green-400 hover:underline"
+          >
+            políticas de Google
+          </a>.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-semibold text-green-400">
+          5. Derechos del usuario
+        </h2>
+        <p class="text-gray-300">
+          Puedes ejercer tus derechos de acceso, rectificación, supresión u oposición al tratamiento de tus datos personales en cualquier momento. 
+        </p>
+        <p class="text-green-400 font-semibold">contacto@despertardigital.es</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-semibold text-green-400">
+          6. Seguridad de la información
+        </h2>
+        <p class="text-gray-300">
+          Aplicamos medidas técnicas y organizativas razonables para proteger tus datos, pero ningún sistema es completamente seguro.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-semibold text-green-400">
+          7. Cambios en esta política
+        </h2>
+        <p class="text-gray-300">
+          Nos reservamos el derecho de modificar esta política para adaptarla a cambios legales o técnicos. 
+          Las actualizaciones se publicarán en esta misma página, indicando la fecha de la última revisión.
+        </p>
+      </section>
+
+      <section class="space-y-3 text-center">
+        <p class="text-gray-400 text-sm">
+          Si tienes dudas sobre esta Política de Privacidad, puedes contactarnos en:
+        </p>
+        <a
+          href="mailto:contacto@despertardigital.es"
+          class="text-green-400 hover:underline"
+        >
+          contacto@despertardigital.es
+        </a>
+      </section>
+    </div>
+  </main>
+</Layout>
