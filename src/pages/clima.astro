@@ -1,16 +1,32 @@
 ---
+// src/pages/clima.astro
 import Layout from "../layouts/Layout.astro";
-import NavBar from "../components/NavBar.astro";
-import CitySearchIsland from "../islands/CitySearchIsland.jsx";
+import WeatherCityTables from "../components/ForecastTables";
+import LocationButtonIsland from "../islands/LocationButtonIsland";
+
+const API_BASE = import.meta.env.PUBLIC_API_URL; // https://despertardigital.es/api
+
+const forecastApi = `${API_BASE}/weather/forecast`; // Concatenado
 ---
 
-<Layout title="Clima en tu ciudad">
- 
+<Layout title="El Tiempo - Despertar Digital">
 
   <section class="flex flex-col items-center justify-center text-center py-16">
-    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">Clima</h2>
+    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">
+      El Tiempo
+    </h2>
     <p class="text-gray-600 max-w-2xl mb-10 text-lg">
-      Esta sección está en desarrollo.
+      Pronóstico actualizado para las principales ciudades de España.
     </p>
+
+    <!-- BOTÓN DE UBICACIÓN -->
+    <div class="flex justify-center mb-6">
+      <LocationButtonIsland apiBase={API_BASE} client:load />
+    </div>
+
+    <div class="w-full max-w-5xl px-4">
+      <WeatherCityTables client:load apiUrl={forecastApi} />
+    </div>
   </section>
+
 </Layout>
