@@ -140,7 +140,7 @@ export default function WeatherCard({ apiUrl, city }: Props) {
       <div>🌤️ {weather.description}</div>
       <div>
         🌡️ {formatNumber(weather.temperature)}°C{" "}
-        <span class="text-gray-500">
+        <span class="text-gray-900">
           / se siente {formatNumber(weather.feels_like)}°C
         </span>
       </div>

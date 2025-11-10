@@ -164,7 +164,7 @@ export default function LocationButtonIsland({
     <div class="flex flex-col items-center gap-1">
       <button
         onClick={handleGetLocation}
-        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full transition duration-200 shadow-md"
+        class="flex items-center gap-2 bg-green-900 hover:bg-green-600 text-white px-5 py-2 rounded-full transition duration-200 shadow-md"
       >
         {loading ? "🔄 Detectando ubicación..." : "Usar mi ubicación"}
       </button>
