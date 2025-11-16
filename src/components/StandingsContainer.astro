@@ -1,0 +1,32 @@
+---
+import StandingsTable from "./StandingsTable.astro";
+
+const { apiBase, leagueCode } = Astro.props as { apiBase: string; leagueCode: string };
+
+let standings: any = null;
+let error: string | null = null;
+
+try {
+  const response = await fetch(`${apiBase}/config/standings/${leagueCode}`);
+  if (response.ok) {
+    standings = await response.json();
+  } else {
+    error = `Error ${response.status}`;
+  }
+} catch {
+  error = "Error de conexión";
+}
+---
+<div class="py-4 px-2 max-w-full mx-auto">
+  <!-- here you can also include dropdown/title if you want the container to render them,
+       but in the page we already have the dropdown and title so keep container focused -->
+  {error ? (
+    <div class="bg-red-50 text-red-700 p-2 rounded text-center text-xs">{error}</div>
+  ) : !standings ? (
+    <div class="text-center py-6">
+      <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-green-600 border-t-transparent" />
+    </div>
+  ) : (
+    <StandingsTable standings={standings} />
+  )}
+</div>
