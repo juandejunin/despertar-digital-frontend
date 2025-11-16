@@ -1,5 +1,5 @@
 ---
-// Tipos
+// src/components/StandingsTable.astro
 interface Team {
   position: number;
   playedGames: number;
@@ -11,12 +11,7 @@ interface Team {
   goalDifference: number;
   points: number;
   form?: string;
-  team: {
-    id: number;
-    tla: string;
-    shortName: string;
-    crest: string;
-  };
+  team: { id: number; tla: string; shortName: string; crest: string };
 }
 
 interface Standings {
@@ -26,101 +21,100 @@ interface Standings {
 }
 
 interface Props {
-  standings: Standings;
+  standings: Standings | null;
+  error: string | null;
 }
 
-const { standings } = Astro.props as Props;
+const { standings, error } = Astro.props as Props;
 ---
-<div class="bg-white rounded-lg shadow overflow-x-auto md:max-w-2xl md:mx-auto min-w-[750px]">
-  <div class="overflow-x-auto">
-    <table class="w-full table-fixed text-xs md:text-sm">
-      <thead class="bg-gradient-to-r from-green-700 to-green-800 text-white">
-        <tr>
-          <th class="w-6 px-0.5 py-1 text-left font-bold md:w-8 md:px-1">#</th>
-          <th class="px-0.5 py-1 text-left font-bold md:px-1">Equipo</th>
-          <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">PJ</th>
-          <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">G</th>
-          <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">E</th>
-          <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">P</th>
-          <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">GF</th>
-          <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">GC</th>
-          <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">DG</th>
-          <th class="w-10 px-0.5 py-1 text-center font-bold md:w-12">Pts</th>
-          <th class="hidden md:table-cell w-28 px-1 py-1 text-center font-bold">Forma</th>
-        </tr>
-      </thead>
 
-      <tbody class="divide-y divide-gray-200">
-        {standings.table.map((team) => (
-          <tr
-            class="hover:bg-gray-50"
-            class:list={{
-              "bg-green-50": team.position <= 4,
-              "bg-blue-50": team.position === 5,
-              "bg-orange-50": team.position >= 18,
-            }}
-            transition:name={`team-${team.team.id}`}
-          >
-            <td class="px-0.5 py-1 font-bold text-gray-900 text-center md:px-1 md:py-1.5">
-              {team.position}
-            </td>
-
-            <td class="px-0.5 py-1 flex items-center gap-1 md:gap-1.5 md:px-1">
-              <img
-                src={team.team.crest}
-                alt={team.team.tla}
-                class="w-4 h-4 object-contain flex-shrink-0 md:w-5 md:h-5"
-                loading="lazy"
-              />
-              <div class="truncate max-w-20 md:max-w-none">
-                <div class="font-medium text-gray-900 md:hidden text-[11px]">{team.team.tla}</div>
-                <div class="font-medium text-gray-900 hidden md:block text-sm">{team.team.shortName}</div>
-              </div>
-            </td>
-
-            <td class="px-0.5 py-1 text-center md:px-1 md:py-1.5">{team.playedGames}</td>
-            <td class="px-0.5 py-1 text-center text-green-600 font-medium md:px-1 md:py-1.5">{team.won}</td>
-            <td class="px-0.5 py-1 text-center text-yellow-600 font-medium md:px-1 md:py-1.5">{team.draw}</td>
-            <td class="px-0.5 py-1 text-center text-red-600 font-medium md:px-1 md:py-1.5">{team.lost}</td>
-            <td class="px-0.5 py-1 text-center md:px-1 md:py-1.5">{team.goalsFor}</td>
-            <td class="px-0.5 py-1 text-center md:px-1 md:py-1.5">{team.goalsAgainst}</td>
-
-            <td
-              class="px-0.5 py-1 text-center font-medium text-[11px] md:text-sm md:px-1 md:py-1.5"
+{error ? (
+  <div class="bg-red-50 text-red-700 p-2 rounded text-center text-xs">{error}</div>
+) : !standings ? (
+  <div class="text-center py-6">
+    <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-green-600 border-t-transparent" />
+  </div>
+) : (
+  <div class="bg-white rounded-lg shadow overflow-hidden md:max-w-2xl md:mx-auto">
+    <div class="overflow-x-auto min-w-full">
+      <table class="w-full table-fixed text-xs md:text-sm">
+        <thead class="bg-gradient-to-r from-green-700 to-green-800 text-white">
+          <tr>
+            <th class="w-6 px-0.5 py-1 text-left font-bold md:w-8 md:px-1">#</th>
+            <th class="px-0.5 py-1 text-left font-bold md:px-1">Equipo</th>
+            <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">PJ</th>
+            <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">G</th>
+            <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">E</th>
+            <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">P</th>
+            <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">GF</th>
+            <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">GC</th>
+            <th class="w-8 px-0.5 py-1 text-center font-bold md:w-10">DG</th>
+            <th class="w-10 px-0.5 py-1 text-center font-bold md:w-12">Pts</th>
+            <th class="hidden md:table-cell w-28 px-1 py-1 text-center font-bold">Forma</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {standings.table.map((team) => (
+            <tr
+              class="hover:bg-gray-50"
               class:list={{
-                "text-green-600": team.goalDifference > 0,
-                "text-red-600": team.goalDifference < 0,
+                "bg-green-50": team.position <= 4,
+                "bg-blue-50": team.position === 5,
+                "bg-orange-50": team.position >= 18
               }}
             >
-              {team.goalDifference > 0 ? "+" : ""}
-              {team.goalDifference}
-            </td>
-
-            <td class="px-0.5 py-1 text-center font-bold text-gray-900 md:px-1 md:py-1.5">{team.points}</td>
-
-            <td class="hidden md:table-cell px-1 py-1.5">
-              <div class="flex justify-center gap-1">
-                {team.form
-                  ?.split(",")
-                  .slice(-5)
-                  .map((result: string) => (
+              <td class="px-0.5 py-1 font-bold text-gray-900 text-center md:px-1 md:py-1.5">
+                {team.position}
+              </td>
+              <td class="px-0.5 py-1 flex items-center gap-1 md:gap-1.5 md:px-1">
+                <img
+                  src={team.team.crest}
+                  alt={team.team.tla}
+                  class="w-4 h-4 object-contain flex-shrink-0 md:w-5 md:h-5"
+                  loading="lazy"
+                />
+                <div class="truncate max-w-20 md:max-w-none">
+                  <div class="font-medium text-gray-900 md:hidden text-[11px]">{team.team.tla}</div>
+                  <div class="font-medium text-gray-900 hidden md:block text-sm">{team.team.shortName}</div>
+                </div>
+              </td>
+              <td class="px-0.5 py-1 text-center md:px-1 md:py-1.5">{team.playedGames}</td>
+              <td class="px-0.5 py-1 text-center text-green-600 font-medium md:px-1 md:py-1.5">{team.won}</td>
+              <td class="px-0.5 py-1 text-center text-yellow-600 font-medium md:px-1 md:py-1.5">{team.draw}</td>
+              <td class="px-0.5 py-1 text-center text-red-600 font-medium md:px-1 md:py-1.5">{team.lost}</td>
+              <td class="px-0.5 py-1 text-center md:px-1 md:py-1.5">{team.goalsFor}</td>
+              <td class="px-0.5 py-1 text-center md:px-1 md:py-1.5">{team.goalsAgainst}</td>
+              <td
+                class="px-0.5 py-1 text-center font-medium text-[11px] md:text-sm md:px-1 md:py-1.5"
+                class:list={{
+                  "text-green-600": team.goalDifference > 0,
+                  "text-red-600": team.goalDifference < 0
+                }}
+              >
+                {team.goalDifference > 0 ? "+" : ""}{team.goalDifference}
+              </td>
+              <td class="px-0.5 py-1 text-center font-bold text-gray-900 md:px-1 md:py-1.5">{team.points}</td>
+              <td class="hidden md:table-cell px-1 py-1.5">
+                <div class="flex justify-center gap-1">
+                  {team.form?.split(",").slice(-5).map((result) => (
                     <span
                       class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white"
                       class:list={{
                         "bg-green-600": result === "W",
                         "bg-yellow-500": result === "D",
-                        "bg-red-600": result === "L",
+                        "bg-red-600": result === "L"
                       }}
                       title={result === "W" ? "Ganado" : result === "D" ? "Empatado" : "Perdido"}
                     >
                       {result === "W" ? "G" : result === "D" ? "E" : "P"}
                     </span>
                   ))}
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+)}
