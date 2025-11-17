@@ -1,0 +1,41 @@
+---
+// src/components/futbol/ScorersContainer.astro
+import ScorersTable from "./ScorersTable.astro";
+
+const { apiBase, leagueCode } = Astro.props as { 
+  apiBase: string; 
+  leagueCode: string 
+};
+
+let scorers: any = null;
+let error: string | null = null;
+
+try {
+  const response = await fetch(`${apiBase}/config/scorers/${leagueCode}`);
+  if (response.ok) {
+    scorers = await response.json();
+  } else {
+    error = `Error ${response.status}`;
+  }
+} catch (e) {
+  error = "Error de conexión";
+}
+---
+
+<div class="py-4 px-2 max-w-full mx-auto">
+  {error ? (
+    <div class="bg-red-50 text-red-700 p-3 rounded-lg text-center text-sm">
+      {error}
+    </div>
+  ) : !scorers ? (
+    <div class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-yellow-600 border-t-transparent"></div>
+    </div>
+  ) : (
+    <!-- Contenedor con orden responsive -->
+    <div class="order-2 lg:order-2">
+      <!-- La tabla de goleadores ultra-compacta que ya tienes -->
+      <ScorersTable data={scorers} />
+    </div>
+  )}
+</div>

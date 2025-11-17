@@ -1,5 +1,7 @@
 ---
+
 // src/components/StandingsTable.astro
+
 interface Team {
   position: number;
   playedGames: number;
@@ -21,11 +23,13 @@ interface Standings {
 }
 
 interface Props {
-  standings: Standings | null;
-  error: string | null;
+  standings?: Standings | null;
+  error?: string | null;
 }
 
-const { standings, error } = Astro.props as Props;
+// Valores por defecto (¡esto es lo que faltaba!)
+const { standings = null, error = null } = Astro.props;
+
 ---
 
 {error ? (
