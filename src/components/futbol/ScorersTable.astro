@@ -1,0 +1,70 @@
+---
+// src/components/futbol/ScorersTable.astro
+// ... interfaces iguales ...
+
+const { data = null, error = null } = Astro.props;
+---
+
+{error ? (
+  <div class="bg-red-50 text-red-700 p-2 rounded text-center text-xs">{error}</div>
+) : !data ? (
+  <div class="text-center py-6">
+    <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-yellow-600 border-t-transparent" />
+  </div>
+) : (
+  <!-- w-full para que ocupe todo el ancho disponible -->
+  <div class="bg-white rounded-lg shadow overflow-hidden w-full">
+    <div class="bg-gradient-to-r from-yellow-600 to-yellow-700 text-white px-3 py-2">
+      <h3 class="font-bold text-[13px] leading-tight">Máximos Goleadores</h3>
+      <p class="text-[9px] opacity-90">Temporada {data.season}</p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs">
+        <thead class="bg-yellow-600 text-white text-[11px]">
+          <tr>
+            <th class="w-6 px-1 py-1.5">#</th>
+            <th class="px-1 py-1.5 text-left">Jugador</th>
+            <th class="w-8 px-1 py-1.5 text-center">G</th>
+            <!-- Ahora A y P se ven desde móvil (solo se ocultan en pantallas <320px) -->
+            <th class="w-7 px-1 py-1.5 text-center max-[340px]:hidden">A</th>
+            <th class="w-7 px-1 py-1.5 text-center max-[380px]:hidden">P</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {data.scorers.slice(0, 10).map((s, i) => (
+            <tr class="hover:bg-gray-50 h-11">
+              <td class="px-1 py-1 text-center font-bold text-gray-700 text-xs">{i + 1}</td>
+              <td class="px-1 py-1 flex items-center gap-1">
+                <img src={s.team.crest} alt={s.team.tla} class="w-5 h-5 rounded-full flex-shrink-0" loading="lazy" />
+                <div class="min-w-0 flex-1">
+                  <div class="font-medium text-gray-900 truncate text-[11px] leading-tight">
+                    {s.player.name}
+                  </div>
+                  <div class="text-[8px] text-gray-500 truncate leading-none">
+                    {s.team.tla}
+                  </div>
+                </div>
+              </td>
+              <td class="px-1 py-1 text-center">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-yellow-100 text-yellow-700 font-bold text-xs">
+                  {s.goals}
+                </span>
+              </td>
+              <td class="px-1 py-1 text-center text-gray-700 font-medium text-xs max-[340px]:hidden">
+                {s.assists}
+              </td>
+              <td class="px-1 py-1 text-center text-gray-700 font-medium text-xs max-[380px]:hidden">
+                {s.penalties}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-2 py-1 text-[8px] text-gray-500 text-center border-t bg-gray-50">
+      Hoy {new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+    </div>
+  </div>
+)}

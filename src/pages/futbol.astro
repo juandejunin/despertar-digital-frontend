@@ -1,7 +1,9 @@
 ---
+// src/pages/futbol.astro
 import Layout from "../layouts/Layout.astro";
 import { ViewTransitions } from "astro:transitions";
 import StandingsContainer from "../components/StandingsContainer.astro";
+import ScorersContainer from "../components/futbol/ScorersContainer.astro";
 
 const API_BASE = import.meta.env.PUBLIC_API_URL;
 const url = new URL(Astro.url);
@@ -16,28 +18,41 @@ const LEAGUES: Record<string, { name: string; emoji: string }> = {
 };
 const league = LEAGUES[leagueCode] ?? { name: leagueCode, emoji: "Trophy" };
 ---
+
 <Layout title={`Fútbol - ${league.name}`}>
-  <div class="flex justify-center mb-4">
-  <select
-    class="px-3 py-1 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600"
-    onchange="window.location.search = 'league=' + this.value"
-  >
-    {
-      Object.entries(LEAGUES).map(([code, { name, emoji }]) => (
-        <option value={code} selected={code === leagueCode}>
-          {emoji} {name}
-        </option>
-      ))
-    }
-  </select>
-</div>
   <ViewTransitions />
+  
+  <div class="py-8 px-4 max-w-7xl mx-auto">
+    <!-- Selector de ligas -->
+    <div class="flex justify-center mb-6">
+      <select
+        class="px-4 py-2 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
+        onchange="window.location.search = 'league=' + this.value"
+      >
+        {Object.entries(LEAGUES).map(([code, { name, emoji }]) => (
+          <option value={code} selected={code === leagueCode}>
+            {emoji} {name}
+          </option>
+        ))}
+      </select>
+    </div>
 
-  <!-- dropdown y título los mantienes aquí igual que ahora -->
+    <!-- Título -->
+    <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">
+      {league.name}
+    </h1>
 
-  <!-- ahora insertas el contenedor (SSR) -->
-  <StandingsContainer apiBase={API_BASE} leagueCode={leagueCode} />
-  <!-- Dropdown -->
+    <!-- GRID CORREGIDO: Posiciones primero en móvil -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- 1. Tabla de posiciones (primero en móvil) -->
+      <div class="order-1 lg:order-1">
+        <StandingsContainer apiBase={API_BASE} leagueCode={leagueCode} />
+      </div>
 
-
+      <!-- 2. Goleadores (segundo en móvil, derecha en escritorio) -->
+      <div class="order-2 lg:order-2">
+        <ScorersContainer apiBase={API_BASE} leagueCode={leagueCode} />
+      </div>
+    </div>
+  </div>
 </Layout>
