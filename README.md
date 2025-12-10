@@ -1,43 +1,56 @@
-# Astro Starter Kit: Minimal
+# Despertar Digital - Portal Informativo en Tiempo Real
 
-```sh
-npm create astro@latest -- --template minimal
-```
+**Live**: https://despertardigital.es
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Portal informativo ultrarrápido con datos actualizados de **tiempo**, **economía** y **deportes**.  
+Carga en menos de 1 segundo · 100 % responsive · Modo oscuro · Sin trackers invasivos.
 
-## 🚀 Project Structure
+![Astro](https://img.shields.io/badge/Astro-4+-000000.svg?style=flat&logo=astro)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4.svg?style=flat&logo=tailwind-css)
+![Nginx](https://img.shields.io/badge/Nginx-Proxy-009639.svg?style=flat&logo=nginx)
+![Website](https://img.shields.io/website/https/despertardigital.es?label=despertardigital.es)
 
-Inside of your Astro project, you'll see the following folders and files:
+## Arquitectura de producción
+Usuario
+↓ HTTPS (Let’s Encrypt)
+Nginx (reverse proxy + compresión)
+├── Frontend estático → /var/www/despertardigital.es (Astro build)
+└── Backend propio → localhost:5000
+↓ Base de datos (caché inteligente)
+↓ APIs externas solo cuando el caché ha expirado
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- **Frontend**: Astro 4+ (HTML estático puro + hidratación mínima)
+- **Backend propio**: middleware que protege y cachea todas las APIs externas
+- **Base de datos**: almacena resultados para no superar límites gratuitos
+- **Cookies**: preferencias de usuario (ciudad del tiempo, tema, etc.)
+- **Servidor**: VPS único con Nginx sirviendo front + back
+- **Caché inteligente**: evita consultas innecesarias → siempre rápido y gratis
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Secciones activas
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Sección     | Fuente de datos                     | Frecuencia de actualización |
+|-------------|-------------------------------------|-----------------------------|
+| Tiempo      | OpenWeatherMap / AEMET / etc.       | Cada 10-15 min (caché)      |
+| Economía    | Alpha Vantage, Yahoo Finance, etc.  | Cada 1-5 min (caché)        |
+| Deportes    | API-Football, TheSportsDB, etc.     | Según competición (caché)   |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Stack completo
 
-## 🧞 Commands
+| Capa           | Tecnología                          | Motivo                                          |
+|----------------|-------------------------------------|-------------------------------------------------|
+| Frontend       | Astro + Tailwind CSS + TypeScript   | Velocidad extrema y SEO perfecto                |
+| Backend        | Node.js (Express)      | Middleware + control total                      |
+| Base de datos  | MongoDb         | Persistencia del caché                          |
+| Web Server     | Nginx                               | Reverse proxy, SSL, compresión                  |
+| Hosting        | VPS propio                          | Coste fijo y control absoluto                   |
 
-All commands are run from the root of the project, from a terminal:
+## Variables de entorno (backend)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```env
+OPENWEATHER_API_KEY=xxxxxxxxxx
+ALPHA_VANTAGE_KEY=xxxxxxxxxx
+RAPIDAPI_KEY=xxxxxxxxxx
+DB_HOST=localhost
+DB_USER=...
+DB_PASS=...
+DB_NAME=despertar_cache
