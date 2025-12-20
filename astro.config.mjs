@@ -7,4 +7,11 @@ export default defineConfig({
   integrations: [preact(), tailwind()],
   output: 'server',
   adapter: node({ mode: 'standalone' }),
+   vite: {
+    resolve: {
+      alias: {
+        '@': new URL('./src', import.meta.url) // <--- aquí definimos el alias
+      }
+    }
+  }
 });

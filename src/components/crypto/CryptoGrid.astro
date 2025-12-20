@@ -1,0 +1,12 @@
+---
+import type { CryptoData } from '../../types/crypto';
+import CryptoCard from './CryptoCard.astro';
+
+const props = Astro.props as { coins?: CryptoData[] };
+const coins: CryptoData[] = props.coins ?? []; // fallback a array vacío
+---
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {coins.map((coin) => (
+    <CryptoCard key={coin.id} data={coin} />
+  ))}
+</div>

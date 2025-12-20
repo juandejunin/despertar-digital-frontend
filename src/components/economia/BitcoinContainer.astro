@@ -1,0 +1,29 @@
+---
+// src/components/economia/BitcoinContainer.astro
+import BitcoinTable from './BitcoinTable.astro';
+
+const API_BASE = import.meta.env.PUBLIC_API_URL; // o "https://despertardigital.es"
+let bitcoinData = null;
+let error: string | null = null;
+
+try {
+  const res = await fetch(`${API_BASE}/api/crypto/bitcoin`);
+  if (!res.ok) throw new Error(`Error ${res.status}`);
+  const json = await res.json();
+  bitcoinData = json.data;
+} catch (e) {
+  error = 'No se pudieron cargar los datos de Bitcoin';
+}
+---
+
+<div class="py-4 px-2 max-w-full mx-auto">
+  {error ? (
+    <div class="bg-red-50 text-red-700 p-3 rounded-lg text-center text-sm">{error}</div>
+  ) : !bitcoinData ? (
+    <div class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-yellow-600 border-t-transparent"></div>
+    </div>
+  ) : (
+    <BitcoinTable data={bitcoinData} />
+  )}
+</div>

@@ -1,0 +1,48 @@
+---
+// src/components/economia/CryptoTable.astro
+const { data } = Astro.props as { data: import('@/types/crypto').CryptoData };
+---
+
+<div class="bg-white rounded-lg shadow overflow-hidden w-full max-w-md mx-auto">
+  <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-2">
+    <h3 class="font-bold text-[13px] leading-tight">Cripto: {data.name} ({data.symbol})</h3>
+    <p class="text-[9px] opacity-90">Última actualización: {new Date(data.lastUpdated).toLocaleString("es-ES")}</p>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-xs">
+      <tbody class="divide-y divide-gray-200">
+        <tr>
+          <td class="px-2 py-1 font-medium">Precio</td>
+          <td class="px-2 py-1 text-right font-bold">${data.price.toLocaleString()}</td>
+        </tr>
+        <tr>
+          <td class="px-2 py-1 font-medium">Cambio 24h</td>
+          <td class="px-2 py-1 text-right">{data.change24h.toFixed(2)}%</td>
+        </tr>
+        <tr>
+          <td class="px-2 py-1 font-medium">Market Cap</td>
+          <td class="px-2 py-1 text-right">${data.marketCap.toLocaleString()}</td>
+        </tr>
+        <tr>
+          <td class="px-2 py-1 font-medium">Volumen 24h</td>
+          <td class="px-2 py-1 text-right">${data.volume24h.toLocaleString()}</td>
+        </tr>
+        <tr>
+          <td class="px-2 py-1 font-medium">Máximo 24h</td>
+          <td class="px-2 py-1 text-right">${data.high24h.toLocaleString()}</td>
+        </tr>
+        <tr>
+          <td class="px-2 py-1 font-medium">Mínimo 24h</td>
+          <td class="px-2 py-1 text-right">${data.low24h.toLocaleString()}</td>
+        </tr>
+        <tr>
+          <td class="px-2 py-1 font-medium">Imagen</td>
+          <td class="px-2 py-1 text-right">
+            <img src={data.image} alt={data.name} class="w-6 h-6 inline-block" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

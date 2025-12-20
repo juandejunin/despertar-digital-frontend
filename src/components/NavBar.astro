@@ -2,11 +2,14 @@
 
 ---
 
-
-<nav class="j75-nav  fixed w-full bg-despertar-dark text-astro-white z-50 flex items-center justify-between p-6">
+<nav
+  class="j75-nav fixed w-full bg-despertar-dark text-astro-white z-50 flex items-center justify-between p-6"
+>
   <!-- Logo -->
   <div class="text-2xl font-bold font-inconsolata text-white">
-    <a href="/">Despertar Digital<span class="text-astro-primary-orange">.</span></a>
+    <a href="/"
+      >Despertar Digital<span class="text-astro-primary-orange">.</span></a
+    >
   </div>
 
   <!-- Ícono de hamburguesa personalizado -->
@@ -26,33 +29,151 @@
   <!-- Overlay con transición -->
   <div
     id="overlay"
-    class="fixed inset-0 bg-despertar-dark  opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out z-40"
-  ></div>
+    class="fixed inset-0 bg-despertar-dark opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out z-40"
+  >
+  </div>
 
   <!-- Menú lateral -->
   <div
     id="mobile-menu"
-    class="fixed inset-y-0 left-0 w-0 pt-14 bg-astro-primary-dark text-white text-xl transition-all duration-300 ease-in-out overflow-hidden md:hidden z-50"
+    class="fixed inset-y-0 left-0 w-0 pt-14 bg-astro-primary-dark text-white text-xl transition-all duration-300 ease-in-out overflow-auto md:hidden z-50"
   >
-    <div class="p-4 flex flex-col h-full">
-      <ul class="space-y-4 mt-4 flex-grow">
-        <li><a href="/" class="nav-link block hover:text-astro-secondary-light">Inicio</a></li>
-        <li><a href="/deportes" class="nav-link block hover:text-astro-secondary-light">Deportes</a></li>
-        <li><a href="/clima" class="nav-link block hover:text-astro-secondary-light">Clima</a></li>
-        <li><a href="/contacto" class="nav-link block hover:text-astro-secondary-light">Contacto</a></li>
+    <div class="p-4 flex flex-col">
+      <ul class="space-y-4 mt-4 flex-grow min-w-full">
+        <li>
+          <a href="/" class="nav-link block hover:text-astro-secondary-light"
+            >Inicio</a
+          >
+        </li>
+        <li>
+          <a
+            href="/deportes"
+            class="nav-link block hover:text-astro-secondary-light">Deportes</a
+          >
+        </li>
+        <li class="relative">
+          <button
+            class="nav-link w-full text-left hover:text-astro-secondary-light toggle-submenu"
+          >
+            Economía
+          </button>
+          <ul class="hidden ml-4 mt-2 space-y-2 text-lg">
+            <li>
+              <a
+                href="/economia/criptomonedas"
+                class="nav-link block hover:text-astro-secondary-light"
+                >Criptomonedas</a
+              >
+            </li>
+            <li>
+              <a
+                href="/economia/forex"
+                class="nav-link block hover:text-astro-secondary-light">Forex</a
+              >
+            </li>
+            <li>
+              <a
+                href="/economia/dolar"
+                class="nav-link block hover:text-astro-secondary-light">Dólar</a
+              >
+            </li>
+            <li>
+              <a
+                href="/economia/oro"
+                class="nav-link block hover:text-astro-secondary-light">Oro</a
+              >
+            </li>
+            <li>
+              <a
+                href="/economia/petroleo"
+                class="nav-link block hover:text-astro-secondary-light"
+                >Petróleo</a
+              >
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a
+            href="/clima"
+            class="nav-link block hover:text-astro-secondary-light">Clima</a
+          >
+        </li>
+        <li>
+          <a
+            href="/contacto"
+            class="nav-link block hover:text-astro-secondary-light">Contacto</a
+          >
+        </li>
       </ul>
     </div>
   </div>
 
   <!-- Menú desktop -->
   <ul class="hidden md:flex space-x-6 text-2xl text-white">
-        <li><a href="/" class="nav-link block hover:text-astro-secondary-light">Inicio</a></li>
-        <li><a href="/deportes" class="nav-link block hover:text-astro-secondary-light">Deportes</a></li>
-        <li><a href="/clima" class="nav-link block hover:text-astro-secondary-light">Clima</a></li>
-        <li><a href="/contacto" class="nav-link block hover:text-astro-secondary-light">Contacto</a></li>
+    <li>
+      <a href="/" class="nav-link block hover:text-astro-secondary-light"
+        >Inicio</a
+      >
+    </li>
+    <li>
+      <a
+        href="/deportes"
+        class="nav-link block hover:text-astro-secondary-light">Deportes</a
+      >
+    </li>
+    <li class="relative group">
+      <button class="nav-link hover:text-astro-secondary-light cursor-pointer">
+        Economía
+      </button>
+      <ul
+        class="absolute left-0 top-full mt-0 bg-black text-white rounded shadow-lg space-y-1 py-2
+             opacity-0 invisible
+             group-hover:opacity-100 group-hover:visible
+             transition-opacity duration-200 z-50"
+      >
+        <li>
+          <a
+            href="/economia/criptomonedas"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80"
+            >Criptomonedas</a>
+        </li>
+        <li>
+          <a
+            href="/economia/forex"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Forex</a>
+        </li>
+        <li>
+          <a
+            href="/economia/dolar"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Dólar</a>
+        </li>
+        <li>
+          <a
+            href="/economia/oro"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Oro</a>
+        </li>
+        <li>
+          <a
+            href="/economia/petroleo"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Petróleo</a>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="/clima" class="nav-link block hover:text-astro-secondary-light"
+        >Clima</a
+      >
+    </li>
+    <li>
+      <a
+        href="/contacto"
+        class="nav-link block hover:text-astro-secondary-light">Contacto</a
+      >
+    </li>
   </ul>
 </nav>
-
 
 <script>
   const menuToggle = document.getElementById("j75-nav-toggle");
@@ -63,7 +184,7 @@
     menuToggle.addEventListener("click", () => {
       menuToggle.classList.toggle("open");
       mobileMenu.classList.toggle("w-0");
-      mobileMenu.classList.toggle("w-1/4");
+      mobileMenu.classList.toggle("w-3/4");
       overlay.classList.toggle("opacity-0");
       overlay.classList.toggle("pointer-events-none");
     });
@@ -76,6 +197,18 @@
       overlay.classList.add("pointer-events-none");
     });
   }
+
+  document
+    .querySelectorAll<HTMLButtonElement>(".toggle-submenu")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        const submenu = button.nextElementSibling as HTMLElement | null;
+        if (submenu) {
+          // <-- verificamos que exista
+          submenu.classList.toggle("hidden");
+        }
+      });
+    });
 </script>
 
 <style>

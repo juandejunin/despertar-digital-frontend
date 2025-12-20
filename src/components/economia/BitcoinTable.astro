@@ -1,0 +1,38 @@
+---
+const { data } = Astro.props;
+---
+
+<table class="w-full text-sm border border-gray-300 bg-white">
+  <tbody>
+    <tr>
+      <td class="border px-2 py-1 font-semibold">Nombre</td>
+      <td class="border px-2 py-1">{data.name}</td>
+    </tr>
+    <tr>
+      <td class="border px-2 py-1 font-semibold">Símbolo</td>
+      <td class="border px-2 py-1">{data.symbol}</td>
+    </tr>
+    <tr>
+      <td class="border px-2 py-1 font-semibold">Precio</td>
+      <td class="border px-2 py-1">${data.price}</td>
+    </tr>
+    <tr>
+      <td class="border px-2 py-1 font-semibold">Cambio 24h</td>
+      <td class="border px-2 py-1">{data.change24h}%</td>
+    </tr>
+    <tr>
+      <td class="border px-2 py-1 font-semibold">Máx 24h</td>
+      <td class="border px-2 py-1">${data.high24h}</td>
+    </tr>
+    <tr>
+      <td class="border px-2 py-1 font-semibold">Mín 24h</td>
+      <td class="border px-2 py-1">${data.low24h}</td>
+    </tr>
+    <tr>
+      <td class="border px-2 py-1 font-semibold">Imagen</td>
+      <td class="border px-2 py-1">
+        <img src={data.image} alt="Bitcoin" class="w-8 h-8" />
+      </td>
+    </tr>
+  </tbody>
+</table>
