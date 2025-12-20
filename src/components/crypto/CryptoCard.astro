@@ -1,0 +1,19 @@
+---
+// src/components/crypto/CryptoCard.astro
+const { data } = Astro.props;
+
+// Determinar color y flecha según cambio 24h
+const isUp = data.change24h >= 0;
+const changeColor = isUp ? "text-green-600" : "text-red-600";
+const arrow = isUp ? "↑" : "↓";
+---
+
+<div class="bg-white shadow-md rounded-lg p-4 flex flex-col items-center text-center">
+  <img src={data.image} alt={data.name} class="w-16 h-16 mb-2"/>
+  <h2 class="font-bold text-lg">{data.name} ({data.symbol})</h2>
+  <p class="text-xl font-semibold mt-1">${data.price.toLocaleString()}</p>
+  <p class={`${changeColor} font-bold mt-1`}>
+    {arrow} {data.change24h.toFixed(2)}%
+  </p>
+  <p class="text-sm text-gray-500 mt-2">Volumen 24h: ${data.volume24h.toLocaleString()}</p>
+</div>

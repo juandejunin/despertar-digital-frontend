@@ -1,0 +1,28 @@
+---
+const { data } = Astro.props;
+---
+
+<div class="bg-white rounded-lg shadow overflow-hidden">
+  <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2">
+    <h3 class="font-bold text-sm">Dólar Argentina</h3>
+  </div>
+
+  <table class="w-full text-xs">
+    <thead class="bg-blue-600 text-white">
+      <tr>
+        <th class="px-2 py-2 text-left">Tipo</th>
+        <th class="px-2 py-2 text-center">Compra</th>
+        <th class="px-2 py-2 text-center">Venta</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y">
+      {data.map(d => (
+        <tr class="hover:bg-gray-50">
+          <td class="px-2 py-2 font-medium">{d.nombre}</td>
+          <td class="px-2 py-2 text-center">{d.compra}</td>
+          <td class="px-2 py-2 text-center font-bold">{d.venta}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

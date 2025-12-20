@@ -1,0 +1,29 @@
+---
+// src/components/economia/CryptoContainer.astro
+import CryptoTable from './CryptoTable.astro';
+
+const API_BASE = import.meta.env.PUBLIC_API_URL;
+let crypto: import('@/types/crypto').CryptoData | null = null;
+let error: string | null = null;
+
+try {
+  const res = await fetch(`${API_BASE}/api/crypto/bitcoin`);
+  if (!res.ok) throw new Error(`Error ${res.status}`);
+  const json = await res.json();
+  crypto = json.data;
+} catch (e) {
+  error = 'No se pudieron cargar los datos de Bitcoin';
+}
+---
+
+<div class="py-4 px-2 max-w-full mx-auto">
+  {error ? (
+    <div class="bg-red-50 text-red-700 p-3 rounded-lg text-center text-sm">{error}</div>
+  ) : !crypto ? (
+    <div class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-600 border-t-transparent"></div>
+    </div>
+  ) : (
+    <CryptoTable data={crypto} />
+  )}
+</div>

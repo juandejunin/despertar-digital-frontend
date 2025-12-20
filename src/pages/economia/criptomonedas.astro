@@ -1,0 +1,32 @@
+---
+// src/pages/economia/cryptomonedas.astro
+import Layout from "@/layouts/Layout.astro";
+import CryptoGrid from "@/components/crypto/CryptoGrid.astro";
+
+const API_BASE = "https://despertardigital.es";
+let coins = [];
+let error = null;
+
+try {
+  const res = await fetch(`${API_BASE}/api/crypto/top`);
+  if (!res.ok) throw new Error("Error al cargar criptos");
+  const json = await res.json();
+  coins = json.data;
+} catch (e) {
+  error = "No se pudieron cargar las criptomonedas";
+}
+---
+
+<Layout title="Criptomonedas - Despertar Digital">
+  <section class="py-16 px-4 flex flex-col items-center">
+    <h1 class="text-4xl font-bold mb-8">Criptomonedas</h1>
+
+    {error ? (
+      <div class="bg-red-100 text-red-700 p-3 rounded">{error}</div>
+    ) : coins.length === 0 ? (
+      <div class="animate-spin rounded-full h-10 w-10 border-4 border-yellow-600 border-t-transparent"></div>
+    ) : (
+      <CryptoGrid coins={coins} />
+    )}
+  </section>
+</Layout>

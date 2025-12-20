@@ -1,0 +1,41 @@
+---
+// src/components/crypto/BitcoinCard.astro
+const { data } = Astro.props;
+const sube = data.change24h >= 0;
+const cambioIcon = sube 
+  ? "▲"  // flecha hacia arriba
+  : "▼"; // flecha hacia abajo
+---
+
+<div class="bg-white rounded-xl shadow p-6 max-w-sm mx-auto">
+  <!-- Encabezado: imagen + nombre -->
+  <div class="flex items-center gap-4 mb-4">
+    <img src={data.image} alt={data.name} class="w-12 h-12 rounded-full" />
+    <div>
+      <h2 class="font-bold text-lg">{data.name}</h2>
+      <p class="text-gray-500 uppercase text-sm">{data.symbol}</p>
+    </div>
+  </div>
+
+  <!-- Métricas en chips -->
+  <div class="flex flex-wrap gap-3 mb-4">
+    <div class="px-3 py-1 rounded bg-gray-100 font-medium text-sm">
+      Precio: ${data.price.toLocaleString()}
+    </div>
+    <div class={`px-3 py-1 rounded font-medium text-sm flex items-center gap-1 ${sube ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+      {cambioIcon} Cambio 24h: {data.change24h.toFixed(2)}%
+    </div>
+    <div class="px-3 py-1 rounded bg-gray-100 font-medium text-sm">
+      Capitalización: ${data.marketCap.toLocaleString()}
+    </div>
+    <div class="px-3 py-1 rounded bg-gray-100 font-medium text-sm">
+      Volumen 24h: ${data.volume24h.toLocaleString()}
+    </div>
+  </div>
+
+  <!-- Máximo y mínimo 24h -->
+  <div class="flex justify-between text-sm text-gray-600">
+    <div>Máx 24h: ${data.high24h.toLocaleString()}</div>
+    <div>Mín 24h: ${data.low24h.toLocaleString()}</div>
+  </div>
+</div>

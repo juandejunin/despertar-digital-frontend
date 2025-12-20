@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import BitcoinTable from "../components/economia/BitcoinTable.astro";
+import { getBitcoin } from "../lib/crypto";
+import BitcoinCard from "@/components/crypto/BitcoinCard.astro";
+
+let bitcoin = null;
+let error = null;
+
+try {
+  bitcoin = await getBitcoin();
+} catch (e) {
+  error = "No se pudo cargar Bitcoin";
+}
+---
+
+<Layout title="Bitcoin">
+  <section class="max-w-xl mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-6 text-center">Bitcoin</h1>
+
+    {error && <p class="text-red-600 text-center">{error}</p>}
+
+    {!error && !bitcoin && (
+      <p class="text-center">Cargando...</p>
+    )}
+
+    {bitcoin && <BitcoinCard data={bitcoin} />}
+  </section>
+</Layout>
