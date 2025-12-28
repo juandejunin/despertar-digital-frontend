@@ -1,0 +1,68 @@
+---
+type DolarRate = {
+  moneda: string;
+  casa: string;
+  nombre: string;
+  compra: number;
+  venta: number;
+  fechaActualizacion: string;
+};
+
+const { data } = Astro.props as {
+  data?: {
+    dolares?: DolarRate[];
+  } | null;
+};
+
+const rates = data?.dolares ?? [];
+---
+
+<div class="bg-white shadow rounded-lg overflow-hidden w-full max-w-xl">
+  <div class="bg-gray-100 px-4 py-2">
+    <h3 class="font-bold text-sm">Cotización Dólar Argentina</h3>
+    <p class="text-xs text-gray-500">
+      {rates.length > 0
+        ? "Valores oficiales y paralelos"
+        : "Datos no disponibles"}
+    </p>
+  </div>
+
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-4 py-2 text-left">Tipo</th>
+        <th class="px-4 py-2 text-right">Compra</th>
+        <th class="px-4 py-2 text-right">Venta</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y">
+      {rates.length > 0 ? (
+        rates.map((rate) => (
+          <tr>
+            <td class="px-4 py-2 font-medium">{rate.nombre}</td>
+            <td class="px-4 py-2 text-right">
+              ${rate.compra.toLocaleString("es-AR")}
+            </td>
+            <td class="px-4 py-2 text-right font-bold">
+              ${rate.venta.toLocaleString("es-AR")}
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colspan="3" class="px-4 py-6 text-center text-gray-400">
+            No hay cotizaciones disponibles
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+
+  {rates[0]?.fechaActualizacion && (
+    <div class="px-4 py-2 text-xs text-gray-500 text-right">
+      Última actualización:{" "}
+      {new Date(rates[0].fechaActualizacion).toLocaleString("es-AR")}
+    </div>
+  )}
+</div>
