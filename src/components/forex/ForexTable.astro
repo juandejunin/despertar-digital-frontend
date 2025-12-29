@@ -1,0 +1,83 @@
+---
+// Props
+type ForexTrendComparison = {
+  daysAgo: number;
+  rate: number;
+};
+
+type ForexTrend = {
+  currency: string;
+  today: number;
+  comparisons: ForexTrendComparison[];
+};
+
+interface Props {
+  trends: ForexTrend[];
+}
+
+const { trends = [] } = Astro.props as Props;
+
+// Periodos a mostrar
+const periods = [
+  { days: 1, short: '1d', long: 'Día' },
+  { days: 7, short: '7d', long: 'Semana' },
+  { days: 30, short: '1m', long: 'Mes' },
+  { days: 180, short: '6m', long: '6 Meses' },
+  { days: 365, short: '1a', long: 'Año' },
+];
+---
+
+<section class="flex justify-center w-full py-8 px-2 ">
+  <div class="overflow-x-auto w-full md:w-3/4 mx-auto  rounded-lg shadow-lg max-h-[70vh]">
+    <table class="table-auto border-collapse text-xs w-full max-h-[70vh]">
+<thead class="bg-gray-100 text-gray-700">
+  <tr class="sticky top-0 z-10">
+    <!-- Columna Moneda -->
+    <th class="text-left px-2 sm:px-1 md:px-3 py-2 w-16 font-semibold bg-gray-100">
+      Moneda
+    </th>
+
+    <!-- Columna Hoy -->
+    <th class="text-right px-2 sm:px-1 md:px-3 py-2 w-16 font-semibold bg-gray-100">
+      Hoy
+    </th>
+
+    <!-- Columnas de períodos -->
+    {periods.map(period => (
+      <th class="px-2 sm:px-1 md:px-3 py-2 text-center font-semibold whitespace-nowrap bg-gray-100">
+        {/* Mostrar abreviatura en móvil */}
+        <span class="block md:hidden">{period.short}</span>
+        {/* Mostrar nombre completo en tablet+ */}
+        <span class="hidden md:block">{period.long}</span>
+      </th>
+    ))}
+  </tr>
+</thead>
+
+
+      <tbody>
+        {trends.map((trend, idx) => (
+          <tr class={`border-t ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100`}>
+            <td class="px-2 sm:px-1 md:px-3 py-2 font-medium text-gray-800">{trend.currency}</td>
+            <td class="px-2 sm:px-1 md:px-3 py-2 text-right text-gray-700">{trend.today.toFixed(2)}</td>
+
+            {periods.map(({ days }) => {
+              const comp = trend.comparisons.find(c => c.daysAgo === days);
+              if (!comp) return <td class="px-2 sm:px-1 md:px-2 py-2 text-center text-gray-300">–</td>;
+
+              const up = comp.rate < trend.today;
+              const down = comp.rate > trend.today;
+
+              return (
+                <td class={`px-2 sm:px-1 md:px-2 py-2 text-center font-bold ${up ? "text-green-600" : ""} ${down ? "text-red-600" : ""}`}>
+                  {up ? "▲" : down ? "▼" : "•"}
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+

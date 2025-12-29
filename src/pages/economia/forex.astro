@@ -1,15 +1,72 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
+import ForexTable from "@/components/forex/ForexTable.astro";
+
+interface ForexTrendComparison {
+  daysAgo: number;
+  date: string;
+  rate: number;
+}
+
+interface ForexTrend {
+  currency: string;
+  today: number;
+  comparisons: ForexTrendComparison[];
+}
+
+interface ForexData {
+  base: string;
+  date: string;
+  trends: ForexTrend[];
+}
+
+let forexData: ForexData | null = null;
+let error: string | null = null;
+
+try {
+  // Pedimos todos los periodos: 1d, 7d, 1m, 6m, 1a
+  const res = await fetch('https://despertardigital.es/api/forex/trends?days=1,7,30,180,365');
+  const json = await res.json();
+  console.log("💱 Forex data fetched:", json);
+
+  if (json.success && json.data) {
+    forexData = json.data;
+  } else {
+    error = 'No se recibieron datos válidos de Forex';
+  }
+} catch (err) {
+  console.error(err);
+  error = 'No se pudo cargar la información de Forex';
+}
 ---
 <Layout title="Forex - Despertar Digital">
-
-  <section class="flex flex-col items-center justify-center text-center py-16">
-    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">
-      Forex
-    </h2>
-    <p class="text-gray-600 max-w-2xl mb-10 text-lg">
-      Esta sección está en desarrollo 🚧
+  <!-- ===== CABECERA ===== -->
+  <header class="text-center space-y-2 px-4">
+    <h1 class="text-3xl sm:text-4xl font-bold">Mercado Forex</h1>
+    <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
+      Todas las monedas se comparan contra el
+      <strong>dólar estadounidense (USD)</strong>.
+      La tabla muestra la tendencia en distintos horizontes temporales.
     </p>
-  </section>
+  </header>
 
+  <!-- ===== CONTENIDO ===== -->
+  <section
+    class="
+      mt-8
+      px-2 sm:px-4 md:px-6
+      w-full max-w-5xl mx-auto
+      flex justify-center
+    "
+  >
+    {error ? (
+      <div class="bg-red-100 text-red-700 p-3 rounded">
+        {error}
+      </div>
+    ) : (
+      <div class="w-full flex justify-center overflow-x-auto">
+        <ForexTable trends={forexData?.trends ?? []} />
+      </div>
+    )}
+  </section>
 </Layout>
