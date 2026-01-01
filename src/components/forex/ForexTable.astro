@@ -1,12 +1,16 @@
 ---
-// Props
+// Props (sin cambios)
+// 1. Importa el tipo de claves
+import { currencyNames } from '../../lib/currencyNames';
+type CurrencyCode = keyof typeof currencyNames;
+
 type ForexTrendComparison = {
   daysAgo: number;
   rate: number;
 };
 
 type ForexTrend = {
-  currency: string;
+  currency: CurrencyCode;
   today: number;
   comparisons: ForexTrendComparison[];
 };
@@ -17,7 +21,7 @@ interface Props {
 
 const { trends = [] } = Astro.props as Props;
 
-// Periodos a mostrar
+// Periodos a mostrar (sin cambios)
 const periods = [
   { days: 1, short: '1d', long: 'Día' },
   { days: 7, short: '7d', long: 'Semana' },
@@ -27,39 +31,53 @@ const periods = [
 ];
 ---
 
-<section class="flex justify-center w-full py-8 px-2 ">
-  <div class="overflow-x-auto w-full md:w-3/4 mx-auto  rounded-lg shadow-lg max-h-[70vh]">
+<section class="flex justify-center w-full py-8 px-2">
+  <div class="overflow-x-auto w-full md:w-3/4 mx-auto rounded-lg shadow-lg max-h-[70vh]">
     <table class="table-auto border-collapse text-xs w-full max-h-[70vh]">
-<thead class="bg-gray-100 text-gray-700">
-  <tr class="sticky top-0 z-10">
-    <!-- Columna Moneda -->
-    <th class="text-left px-2 sm:px-1 md:px-3 py-2 w-16 font-semibold bg-gray-100">
-      Moneda
-    </th>
+      <thead class="bg-gray-100 text-gray-700">
+        <tr class="sticky top-0 z-10">
+          <!-- Columna Moneda -->
+          <th class="text-left px-2 sm:px-1 md:px-3 py-2 w-16 font-semibold bg-gray-100">
+            Moneda
+          </th>
 
-    <!-- Columna Hoy -->
-    <th class="text-right px-2 sm:px-1 md:px-3 py-2 w-16 font-semibold bg-gray-100">
-      Hoy
-    </th>
+          <!-- Columna Hoy -->
+          <th class="text-right px-2 sm:px-1 md:px-3 py-2 w-16 font-semibold bg-gray-100">
+            Hoy
+          </th>
 
-    <!-- Columnas de períodos -->
-    {periods.map(period => (
-      <th class="px-2 sm:px-1 md:px-3 py-2 text-center font-semibold whitespace-nowrap bg-gray-100">
-        {/* Mostrar abreviatura en móvil */}
-        <span class="block md:hidden">{period.short}</span>
-        {/* Mostrar nombre completo en tablet+ */}
-        <span class="hidden md:block">{period.long}</span>
-      </th>
-    ))}
-  </tr>
-</thead>
-
+          <!-- Columnas de períodos -->
+          {periods.map(period => (
+            <th class="px-2 sm:px-1 md:px-3 py-2 text-center font-semibold whitespace-nowrap bg-gray-100">
+              <span class="block md:hidden">{period.short}</span>
+              <span class="hidden md:block">{period.long}</span>
+            </th>
+          ))}
+        </tr>
+      </thead>
 
       <tbody>
         {trends.map((trend, idx) => (
           <tr class={`border-t ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100`}>
-            <td class="px-2 sm:px-1 md:px-3 py-2 font-medium text-gray-800">{trend.currency}</td>
-            <td class="px-2 sm:px-1 md:px-3 py-2 text-right text-gray-700">{trend.today.toFixed(2)}</td>
+<td class="px-2 sm:px-1 md:px-3 py-2 font-medium text-gray-800 relative whitespace-nowrap group">
+  <span class="cursor-help">
+    {trend.currency}
+  </span>
+
+  <div class="
+    absolute z-50 left-full ml-2 top-1/2 -translate-y-1/2
+    opacity-0 group-hover:opacity-100 group-active:opacity-100
+    bg-gray-800 text-white text-xs rounded py-1 px-2
+    whitespace-nowrap shadow-lg pointer-events-none
+    transition-opacity duration-200
+  ">
+    {currencyNames[trend.currency] || trend.currency}
+  </div>
+</td>
+
+            <td class="px-2 sm:px-1 md:px-3 py-2 text-right text-gray-700">
+              {trend.today.toFixed(2)}
+            </td>
 
             {periods.map(({ days }) => {
               const comp = trend.comparisons.find(c => c.daysAgo === days);
@@ -80,4 +98,3 @@ const periods = [
     </table>
   </div>
 </section>
-
