@@ -8,6 +8,7 @@ let error: string | null = null;
 
 try {
   const response = await fetch(`${apiBase}/config/standings/${leagueCode}`);
+  
   if (response.ok) {
     standings = await response.json();
   } else {
