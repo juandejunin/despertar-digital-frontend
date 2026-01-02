@@ -27,7 +27,7 @@ try {
   // Pedimos todos los periodos: 1d, 7d, 1m, 6m, 1a
   const res = await fetch('https://despertardigital.es/api/forex/trends?days=1,7,30,180,365');
   const json = await res.json();
-  console.log("💱 Forex data fetched:", json);
+ 
 
   if (json.success && json.data) {
     forexData = json.data;

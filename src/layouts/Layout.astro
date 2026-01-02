@@ -10,36 +10,57 @@ import "../styles/global.css";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Despertar Digital</title>
     <meta
       name="description"
       content="Solo datos, sin relatos. Noticias automatizadas y objetivas."
     />
-    <slot name="head" />
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK"
-    ></script>
-    <script>
-      {
-        `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      // Solo activar GA si el usuario aceptó cookies
+    <slot name="head" />
+
+    <!-- ===================== -->
+    <!-- Google Analytics + Consent Mode (SAFE ORDER) -->
+    <!-- ===================== -->
+
+    <!-- 1️⃣ Definición global de dataLayer y gtag -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+
+      // Consentimiento por defecto: TODO DENEGADO
+      window.gtag("consent", "default", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        wait_for_update: 800,
+      });
+    </script>
+
+    <!-- 2️⃣ Carga de Google Analytics (async, sin riesgo) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK"
+    ></script>
+
+    <!-- 3️⃣ Activación SOLO si ya hubo consentimiento -->
+    <script is:inline>
       const consent = localStorage.getItem("cookieConsent");
+
       if (consent === "all") {
-        gtag('config', 'G-XX7WSF51QK');
-      }
-    `;
+        window.gtag("js", new Date());
+        window.gtag("config", "G-XX7WSF51QK");
       }
     </script>
   </head>
-  <body
-    class="h-full overflow-y-scroll font-serifSystem text-gray-900 min-h-screen flex flex-col bg-gray-300"
-  >
 
- 
+  <body
+    class="h-full min-h-screen flex flex-col overflow-y-scroll font-serifSystem text-gray-900 bg-gray-300"
+  >
+    <!-- Banner de cookies -->
     <CookieConsent client:load />
 
     <!-- NavBar (fijo arriba) -->
@@ -47,19 +68,21 @@ import "../styles/global.css";
       <NavBar />
     </div>
 
-    <!-- InfoBar (fijo debajo del nav) -->
+    <!-- InfoBar (debajo del nav) -->
     <div class="fixed top-20 left-0 w-full z-40">
-      <!-- top-20 = 80px (NavBar ~72px) -->
+      <!-- top-20 ≈ NavBar (72px) -->
       <InfoBar lastUpdate="12:27" />
     </div>
 
-    <!-- === CONTENIDO PRINCIPAL === -->
+    <!-- ===================== -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ===================== -->
     <main class="flex-1 pt-32">
-      <!-- 128px = NavBar (72) + InfoBar (~40) + margen -->
+      <!-- pt-32 = NavBar + InfoBar + margen -->
       <slot />
     </main>
 
-    <!-- === FOOTER === -->
+    <!-- Footer -->
     <Footer />
   </body>
 </html>

@@ -2,8 +2,8 @@
 // src/pages/futbol.astro
 import Layout from "../layouts/Layout.astro";
 import { ViewTransitions } from "astro:transitions";
-import StandingsContainer from "../components/StandingsContainer.astro";
-import ScorersContainer from "../components/futbol/ScorersContainer.astro";
+import StandingsContainer from "../features/deportes/futbol/components/StandingsContainer.astro";
+import ScorersContainer from "../features/deportes/futbol/components/ScorersContainer.astro";
 
 const API_BASE = import.meta.env.PUBLIC_API_URL;
 const url = new URL(Astro.url);
