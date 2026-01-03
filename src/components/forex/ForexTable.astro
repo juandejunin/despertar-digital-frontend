@@ -1,19 +1,6 @@
 ---
-// Props (sin cambios)
-// 1. Importa el tipo de claves
-import { currencyNames } from '../../lib/currencyNames';
-type CurrencyCode = keyof typeof currencyNames;
-
-type ForexTrendComparison = {
-  daysAgo: number;
-  rate: number;
-};
-
-type ForexTrend = {
-  currency: CurrencyCode;
-  today: number;
-  comparisons: ForexTrendComparison[];
-};
+import type { ForexTrend } from '../../lib/types/forex';
+import { currencyNames } from '../../lib/types/forex';
 
 interface Props {
   trends: ForexTrend[];
@@ -21,7 +8,7 @@ interface Props {
 
 const { trends = [] } = Astro.props as Props;
 
-// Periodos a mostrar (sin cambios)
+// Periodos a mostrar
 const periods = [
   { days: 1, short: '1d', long: 'Día' },
   { days: 7, short: '7d', long: 'Semana' },

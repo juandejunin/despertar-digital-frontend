@@ -1,44 +1,37 @@
 ---
+// src/pages/economia/forex.astro
 import Layout from "@/layouts/Layout.astro";
 import ForexTable from "@/components/forex/ForexTable.astro";
+import type { ForexTrendsResponse } from "@/lib/types/forex";
+import { ForexTrendsResponseSchema } from "@/lib/types/forex";
 
-interface ForexTrendComparison {
-  daysAgo: number;
-  date: string;
-  rate: number;
-}
 
-interface ForexTrend {
-  currency: string;
-  today: number;
-  comparisons: ForexTrendComparison[];
-}
-
-interface ForexData {
-  base: string;
-  date: string;
-  trends: ForexTrend[];
-}
-
-let forexData: ForexData | null = null;
+let forexData: ForexTrendsResponse | null = null;
 let error: string | null = null;
 
 try {
-  // Pedimos todos los periodos: 1d, 7d, 1m, 6m, 1a
   const res = await fetch('https://despertardigital.es/api/forex/trends?days=1,7,30,180,365');
   const json = await res.json();
- 
 
   if (json.success && json.data) {
-    forexData = json.data;
+    // Validación segura con Zod
+    const parsed = ForexTrendsResponseSchema.safeParse(json.data);
+
+    if (parsed.success) {
+      forexData = parsed.data;
+    } else {
+      console.error('Error de validación de Zod:', parsed.error.format());
+      error = 'Datos de Forex inválidos';
+    }
   } else {
     error = 'No se recibieron datos válidos de Forex';
   }
 } catch (err) {
-  console.error(err);
+  console.error('Error al cargar Forex:', err);
   error = 'No se pudo cargar la información de Forex';
 }
 ---
+
 <Layout title="Forex - Despertar Digital">
   <!-- ===== CABECERA ===== -->
   <header class="text-center space-y-2 px-4">
