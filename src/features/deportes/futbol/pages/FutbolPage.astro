@@ -1,0 +1,57 @@
+---
+// src/pages/FutbolPage.astro
+import Layout from "@/layouts/Layout.astro";
+import { ViewTransitions } from "astro:transitions";
+import StandingsContainer from "../components/StandingsContainer.astro";
+import ScorersContainer from "../components/ScorersContainer.astro";
+import { LEAGUES } from "../config/leagues";
+
+const API_BASE = import.meta.env.PUBLIC_API_URL;
+const url = new URL(Astro.url);
+
+// Tipado de códigos de liga según el config
+type LeagueCode = keyof typeof LEAGUES;
+
+// Obtenemos la liga seleccionada desde la URL, o usamos "PD" por defecto
+const code = (url.searchParams.get("league") || "PD").toUpperCase() as LeagueCode;
+
+// Información de la liga actual
+const league = LEAGUES[code];
+---
+
+<Layout title={`Fútbol - ${league.name}`}>
+  <ViewTransitions />
+
+  <div class="py-8 px-4 max-w-7xl mx-auto">
+    <!-- Selector de ligas -->
+    <div class="flex justify-center mb-6">
+      <select
+        class="px-4 py-2 text-sm border border-gray-300 rounded-md bg-white shadow-sm
+               focus:outline-none focus:ring-2 focus:ring-yellow-600"
+        onchange="window.location.search = 'league=' + this.value"
+      >
+        {Object.entries(LEAGUES).map(([leagueKey, { name, emoji }]) => (
+          <option value={leagueKey} selected={leagueKey === code}>
+            {emoji} {name}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Título -->
+    <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">
+      {league.name}
+    </h1>
+
+    <!-- Grid: posiciones y goleadores -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div>
+        <StandingsContainer apiBase={API_BASE} leagueCode={code} />
+      </div>
+
+      <div>
+        <ScorersContainer apiBase={API_BASE} leagueCode={code} />
+      </div>
+    </div>
+  </div>
+</Layout>
