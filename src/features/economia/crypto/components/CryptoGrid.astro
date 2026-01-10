@@ -1,0 +1,16 @@
+---
+import type { CryptoData } from "../types/crypto";
+import CryptoCard from "./CryptoCard.astro";
+
+interface Props {
+  coins?: CryptoData[];
+}
+
+const { coins = [] } = Astro.props as Props;
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {coins.map((coin) => (
+    <CryptoCard data={coin} />
+  ))}
+</div>

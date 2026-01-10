@@ -116,11 +116,37 @@
         >Inicio</a
       >
     </li>
-    <li>
-      <a
-        href="/deportes"
-        class="nav-link block hover:text-astro-secondary-light">Deportes</a
+    <li class="relative group">
+      <button class="nav-link hover:text-astro-secondary-light cursor-pointer">
+        Deportes
+      </button>
+      <ul
+        class="absolute left-0 top-full mt-0 bg-black text-white rounded shadow-lg space-y-1 py-2
+             opacity-0 invisible
+             group-hover:opacity-100 group-hover:visible
+             transition-opacity duration-200 z-50"
       >
+        <li>
+          <a
+            href="/deportes/futbol"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80"
+            >Futbol</a
+          >
+        </li>
+        <li>
+          <a
+            href="/deportes/basquet"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Basquet</a
+          >
+        </li>
+        <li>
+          <a
+            href="/deportes/tenis"
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Tenis</a
+          >
+        </li>
+        
+      </ul>
     </li>
     <li class="relative group">
       <button class="nav-link hover:text-astro-secondary-light cursor-pointer">
@@ -136,27 +162,32 @@
           <a
             href="/economia/criptomonedas"
             class="block px-4 py-1 hover:bg-astro-primary-dark/80"
-            >Criptomonedas</a>
+            >Criptomonedas</a
+          >
         </li>
         <li>
           <a
             href="/economia/forex"
-            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Forex</a>
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Forex</a
+          >
         </li>
         <li>
           <a
             href="/economia/dolar"
-            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Dólar</a>
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Dólar</a
+          >
         </li>
         <li>
           <a
             href="/economia/oro"
-            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Oro</a>
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Oro</a
+          >
         </li>
         <li>
           <a
             href="/economia/petroleo"
-            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Petróleo</a>
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Petróleo</a
+          >
         </li>
       </ul>
     </li>

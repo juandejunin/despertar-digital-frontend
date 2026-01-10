@@ -1,0 +1,56 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getCryptoById } from "../services/getCryptoById";
+import BitcoinCard from "../components/BitcoinCard.astro";
+import type { CryptoData } from "../types/crypto";
+
+const { id } = Astro.params;
+
+let crypto: CryptoData | null = null;
+let error: string | null = null;
+
+if (!id) {
+  error = "Criptomoneda no especificada";
+} else {
+  try {
+    crypto = await getCryptoById(id);
+  } catch (e) {
+    error = "No se pudo cargar la información de la criptomoneda";
+  }
+}
+---
+
+<Layout title={crypto ? crypto.name : "Criptomoneda"}>
+  <section class="max-w-3xl mx-auto py-12 px-4">
+    {error && (
+      <div class="bg-red-100 text-red-700 p-4 rounded text-center">
+        {error}
+      </div>
+    )}
+
+    {!error && !crypto && (
+      <div class="text-center py-10">
+        <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-yellow-600 border-t-transparent"></div>
+      </div>
+    )}
+
+    {crypto && (
+      <>
+        <h1 class="text-3xl font-bold text-center mb-8">
+          {crypto.name}
+        </h1>
+
+        <BitcoinCard data={crypto} />
+
+        <div class="mt-8 text-center">
+          <a
+            href="/economia/criptomonedas"
+            class="text-blue-600 hover:underline text-sm"
+          >
+            ← Volver a criptomonedas
+          </a>
+        </div>
+      </>
+    )}
+  </section>
+</Layout>

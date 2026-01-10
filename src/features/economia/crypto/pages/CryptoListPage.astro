@@ -1,17 +1,14 @@
 ---
-// src/pages/economia/cryptomonedas.astro
 import Layout from "@/layouts/Layout.astro";
-import CryptoGrid from "@/components/crypto/CryptoGrid.astro";
+import CryptoGrid from "../components/CryptoGrid.astro";
+import { getTopCryptos } from "../services/getTopCryptos";
+import type { CryptoData } from "../types/crypto";
 
-const API_BASE = "https://despertardigital.es";
-let coins = [];
-let error = null;
+let coins: CryptoData[] = [];
+let error: string | null = null;
 
 try {
-  const res = await fetch(`${API_BASE}/api/crypto/top`);
-  if (!res.ok) throw new Error("Error al cargar criptos");
-  const json = await res.json();
-  coins = json.data;
+  coins = await getTopCryptos();
 } catch (e) {
   error = "No se pudieron cargar las criptomonedas";
 }
