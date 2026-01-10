@@ -6,8 +6,6 @@ import type { CryptoData } from "../types/crypto";
 
 const { id } = Astro.params;
 
-console.log("PARAM ID:", id);
-
 if (!id) {
   throw new Error("ID de criptomoneda no especificado");
 }
