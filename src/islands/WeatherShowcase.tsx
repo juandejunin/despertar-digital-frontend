@@ -33,7 +33,6 @@ export default function WeatherShowcase({ apiUrl }: Props) {
       .then((res) => res.json())
       .then((data: WeatherData) => {
         const countryCode = data?.location?.country;
-        console.log("🌎 País detectado:", countryCode);
         setCountry(countryCode);
         const list = countryCities[countryCode] || [];
         const combined = savedCity ? [savedCity, ...list.filter(c => c !== savedCity)] : list;
@@ -61,7 +60,7 @@ export default function WeatherShowcase({ apiUrl }: Props) {
   // 🔔 Nuevo: escucha cuando el usuario selecciona una nueva ciudad
   useEffect(() => {
     const handleCitySelected = (e: CustomEvent) => {
-      console.log("📍 Nueva ciudad seleccionada:", e.detail);
+      
       const newCity = e.detail;
       setUserCity(newCity);
       localStorage.setItem("userCity", newCity);
