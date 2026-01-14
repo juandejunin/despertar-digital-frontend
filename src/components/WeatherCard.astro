@@ -7,20 +7,22 @@ const API_BASE = import.meta.env.PUBLIC_API_URL;
 ---
 
 <div
-  class="bg-white rounded-xl shadow-md p-1 border border-gray-100
-         hover:shadow-lg transition-shadow flex flex-col w-full max-w-md"
+  class="bg-white rounded-xl shadow-md p-5 border border-gray-100
+         hover:shadow-lg transition-shadow
+         flex flex-col w-full max-w-md min-h-[360px]"
 >
-  <div class="flex items-center justify-between m-3">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
     <h3 class="text-lg font-bold text-gray-800">Clima Hoy</h3>
   </div>
 
-  <!-- Isla del pronóstico -->
-  <div class="min-h-[360px] ">
+  <!-- Contenido principal -->
+  <div class="flex-1">
     <WeatherShowcase apiUrl={apiUrl} client:load />
   </div>
 
-  <!-- Botón de ubicación -->
-  <div class="mt-1">
+  <!-- Footer -->
+  <div class="mt-4">
     <LocationButtonIsland apiBase={API_BASE} client:load />
   </div>
 </div>

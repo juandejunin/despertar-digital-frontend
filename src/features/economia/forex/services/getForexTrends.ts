@@ -3,6 +3,7 @@ import type { ForexTrendsResponse } from "../types/forex";
 import { ForexTrendsResponseSchema } from "../types/forex";
 
 export async function getForexTrends(): Promise<ForexTrendsResponse> {
+  const t0 = performance.now();
   try {
     const res = await fetch(
       "https://despertardigital.es/api/forex/trends?days=1,7,30,180,365"
