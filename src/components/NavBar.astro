@@ -237,60 +237,117 @@
   const mobileMenu = document.getElementById("mobile-menu");
   const overlay = document.getElementById("overlay");
 
- if (menuToggle && mobileMenu && overlay) {
-  const openMenu = () => {
-    menuToggle.classList.add("open");
-    mobileMenu.classList.remove("w-0");
-    mobileMenu.classList.add("w-3/4");
-    mobileMenu.classList.remove("overflow-hidden");
-    mobileMenu.classList.add("overflow-auto");
-    overlay.classList.remove("opacity-0");
-    overlay.classList.remove("pointer-events-none");
-  };
+  if (menuToggle && mobileMenu && overlay) {
+    const openMenu = () => {
+      menuToggle.classList.add("open");
+      mobileMenu.classList.remove("w-0");
+      mobileMenu.classList.add("w-3/4", "opacity-100");
+      mobileMenu.classList.remove("overflow-hidden");
+      mobileMenu.classList.add("overflow-auto");
+      overlay.classList.remove("opacity-0");
+      overlay.classList.remove("pointer-events-none");
+      overlay.classList.add("opacity-100");
+    };
+    const closeMenu = () => {
+      menuToggle.classList.remove("open");
+      mobileMenu.classList.add("w-0", "opacity-0");
+      mobileMenu.classList.remove("w-3/4", "opacity-100");
+      mobileMenu.classList.add("overflow-hidden");
+      mobileMenu.classList.remove("overflow-auto");
+      overlay.classList.add("opacity-0");
+      overlay.classList.add("pointer-events-none");
+      overlay.classList.remove("opacity-100");
 
-  const closeMenu = () => {
-    menuToggle.classList.remove("open");
-    mobileMenu.classList.add("w-0");
-    mobileMenu.classList.remove("w-3/4");
-    mobileMenu.classList.add("overflow-hidden");
-    mobileMenu.classList.remove("overflow-auto");
-    overlay.classList.add("opacity-0");
-    overlay.classList.add("pointer-events-none");
+      // cerrar submenús
+      document
+        .querySelectorAll("#mobile-menu ul ul")
+        .forEach((submenu) => submenu.classList.add("hidden"));
+    };
 
-    // cerrar submenús
+    menuToggle.addEventListener("click", () => {
+      const isOpen = mobileMenu.classList.contains("w-3/4");
+      isOpen ? closeMenu() : openMenu();
+    });
+
+    overlay.addEventListener("click", closeMenu);
+
+    // Submenús móviles
     document
-      .querySelectorAll("#mobile-menu ul ul")
-      .forEach((submenu) => submenu.classList.add("hidden"));
-  };
+      .querySelectorAll<HTMLButtonElement>("#mobile-menu .toggle-submenu")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const submenu = btn.nextElementSibling as HTMLElement | null;
+          submenu?.classList.toggle("hidden");
+        });
+      });
 
-  menuToggle.addEventListener("click", () => {
-    const isOpen = mobileMenu.classList.contains("w-3/4");
-    isOpen ? closeMenu() : openMenu();
-  });
+    // Submenús escritorio: click + teclado + transición suave
+    document
+      .querySelectorAll<HTMLButtonElement>(
+        "nav > ul li.relative.group > button",
+      )
+      .forEach((button) => {
+        const toggleSubmenu = (e: Event) => {
+          if (window.innerWidth >= 768) {
+            const submenu = button.nextElementSibling as HTMLElement | null;
+            if (submenu) {
+              e.preventDefault();
+              // Toggle con transición suave
+              if (submenu.classList.contains("opacity-0")) {
+                submenu.classList.remove("opacity-0", "invisible");
+                submenu.classList.add("opacity-100", "visible");
+              } else {
+                submenu.classList.remove("opacity-100", "visible");
+                submenu.classList.add("opacity-0", "invisible");
+              }
+            }
+          }
+        };
 
-  overlay.addEventListener("click", closeMenu);
+        button.addEventListener("click", toggleSubmenu);
 
-   document.querySelectorAll<HTMLButtonElement>("nav > ul li.relative.group > button").forEach(button => {
-    button.addEventListener("click", (e) => {
-      if (window.innerWidth >= 768) {
-        const submenu = button.nextElementSibling as HTMLElement | null;
-        if (submenu) {
-          e.preventDefault(); // Evita navegación por click
-          submenu.classList.toggle("opacity-0");
-          submenu.classList.toggle("invisible");
-          submenu.classList.toggle("opacity-100");
-          submenu.classList.toggle("visible");
-        }
+        button.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            toggleSubmenu(e);
+          }
+        });
+      });
+
+    // Listener de resize: cerramos submenús escritorio si se reduce ancho
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 768) {
+        document
+          .querySelectorAll<HTMLElement>("nav > ul li.relative.group > ul")
+          .forEach((submenu) => {
+            submenu.classList.remove("opacity-100", "visible");
+            submenu.classList.add("opacity-0", "invisible");
+          });
       }
     });
-  });
-}
 
+    // Listener para cambios de tamaño de ventana
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) {
+        // Si el menú hamburguesa estaba abierto, cerrarlo
+        if (mobileMenu.classList.contains("w-3/4")) {
+          closeMenu();
+        }
+
+        // Reiniciar submenús móviles a estado oculto
+        document
+          .querySelectorAll("#mobile-menu ul ul")
+          .forEach((submenu) => submenu.classList.add("hidden"));
+      }
+    });
+  }
 </script>
 
 <style>
   #mobile-menu {
     top: 0;
+    transition:
+      width 0.4s ease,
+      opacity 0.4s ease; /* transición suave de ancho y opacidad */
   }
 
   /* Estilos para las líneas del ícono de hamburguesa */
@@ -321,6 +378,10 @@
 
   #j75-nav-toggle.open .line3 {
     transform: rotate(-35deg);
+  }
+
+  #overlay {
+    transition: opacity 0.4s ease; /* transición más suave para el overlay */
   }
 
   /* Asegurar que el overlay sea clickable solo cuando esté visible */
