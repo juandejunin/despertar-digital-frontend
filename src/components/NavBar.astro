@@ -36,7 +36,7 @@
   <!-- Menú lateral -->
   <div
     id="mobile-menu"
-    class="fixed inset-y-0 left-0 w-0 pt-14 bg-astro-primary-dark text-white text-xl transition-all duration-300 ease-in-out overflow-auto md:hidden z-50"
+    class="fixed inset-y-0 left-0 w-0 pt-14 bg-astro-primary-dark text-white text-xl transition-all duration-300 ease-in-out overflow-hidden md:hidden z-50"
   >
     <div class="p-4 flex flex-col">
       <ul class="space-y-4 mt-4 flex-grow min-w-full">
@@ -45,12 +45,40 @@
             >Inicio</a
           >
         </li>
-        <li>
-          <a
-            href="/deportes"
-            class="nav-link block hover:text-astro-secondary-light">Deportes</a
+        <li class="relative">
+          <button
+            class="nav-link w-full text-left hover:text-astro-secondary-light toggle-submenu"
           >
+            Deportes
+          </button>
+          <ul class="hidden ml-4 mt-2 space-y-2 text-lg">
+            <li>
+              <a
+                href="/deportes/futbol"
+                class="nav-link block hover:text-astro-secondary-light"
+              >
+                Fútbol
+              </a>
+            </li>
+            <li>
+              <a
+                href="/deportes/basquet"
+                class="nav-link block hover:text-astro-secondary-light"
+              >
+                Básquet
+              </a>
+            </li>
+            <li>
+              <a
+                href="/deportes/tenis"
+                class="nav-link block hover:text-astro-secondary-light"
+              >
+                Tenis
+              </a>
+            </li>
+          </ul>
         </li>
+
         <li class="relative">
           <button
             class="nav-link w-full text-left hover:text-astro-secondary-light toggle-submenu"
@@ -129,8 +157,7 @@
         <li>
           <a
             href="/deportes/futbol"
-            class="block px-4 py-1 hover:bg-astro-primary-dark/80"
-            >Futbol</a
+            class="block px-4 py-1 hover:bg-astro-primary-dark/80">Futbol</a
           >
         </li>
         <li>
@@ -145,7 +172,6 @@
             class="block px-4 py-1 hover:bg-astro-primary-dark/80">Tenis</a
           >
         </li>
-        
       </ul>
     </li>
     <li class="relative group">
@@ -211,35 +237,55 @@
   const mobileMenu = document.getElementById("mobile-menu");
   const overlay = document.getElementById("overlay");
 
-  if (menuToggle && mobileMenu && overlay) {
-    menuToggle.addEventListener("click", () => {
-      menuToggle.classList.toggle("open");
-      mobileMenu.classList.toggle("w-0");
-      mobileMenu.classList.toggle("w-3/4");
-      overlay.classList.toggle("opacity-0");
-      overlay.classList.toggle("pointer-events-none");
-    });
+ if (menuToggle && mobileMenu && overlay) {
+  const openMenu = () => {
+    menuToggle.classList.add("open");
+    mobileMenu.classList.remove("w-0");
+    mobileMenu.classList.add("w-3/4");
+    mobileMenu.classList.remove("overflow-hidden");
+    mobileMenu.classList.add("overflow-auto");
+    overlay.classList.remove("opacity-0");
+    overlay.classList.remove("pointer-events-none");
+  };
 
-    overlay.addEventListener("click", () => {
-      menuToggle.classList.remove("open");
-      mobileMenu.classList.add("w-0");
-      mobileMenu.classList.remove("w-1/4");
-      overlay.classList.add("opacity-0");
-      overlay.classList.add("pointer-events-none");
-    });
-  }
+  const closeMenu = () => {
+    menuToggle.classList.remove("open");
+    mobileMenu.classList.add("w-0");
+    mobileMenu.classList.remove("w-3/4");
+    mobileMenu.classList.add("overflow-hidden");
+    mobileMenu.classList.remove("overflow-auto");
+    overlay.classList.add("opacity-0");
+    overlay.classList.add("pointer-events-none");
 
-  document
-    .querySelectorAll<HTMLButtonElement>(".toggle-submenu")
-    .forEach((button) => {
-      button.addEventListener("click", () => {
+    // cerrar submenús
+    document
+      .querySelectorAll("#mobile-menu ul ul")
+      .forEach((submenu) => submenu.classList.add("hidden"));
+  };
+
+  menuToggle.addEventListener("click", () => {
+    const isOpen = mobileMenu.classList.contains("w-3/4");
+    isOpen ? closeMenu() : openMenu();
+  });
+
+  overlay.addEventListener("click", closeMenu);
+
+   document.querySelectorAll<HTMLButtonElement>("nav > ul li.relative.group > button").forEach(button => {
+    button.addEventListener("click", (e) => {
+      if (window.innerWidth >= 768) {
         const submenu = button.nextElementSibling as HTMLElement | null;
         if (submenu) {
-          // <-- verificamos que exista
-          submenu.classList.toggle("hidden");
+          e.preventDefault(); // Evita navegación por click
+          submenu.classList.toggle("opacity-0");
+          submenu.classList.toggle("invisible");
+          submenu.classList.toggle("opacity-100");
+          submenu.classList.toggle("visible");
         }
-      });
+      }
     });
+  });
+}
+
 </script>
 
 <style>
