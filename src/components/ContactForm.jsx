@@ -87,7 +87,12 @@ export default function ContactForm() {
         onInput={handleChange}
       />
 
+      <label for="name" class="sr-only">
+        Nombre
+      </label>
+
       <input
+        id="name"
         type="text"
         name="name"
         placeholder="Nombre"
@@ -97,7 +102,12 @@ export default function ContactForm() {
         class="border p-2 rounded"
       />
 
+      <label for="email" class="sr-only">
+        Email
+      </label>
+
       <input
+        id="email"
         type="email"
         name="email"
         placeholder="Email"
@@ -107,7 +117,12 @@ export default function ContactForm() {
         class="border p-2 rounded"
       />
 
+      <label for="message" class="sr-only">
+        Message
+      </label>
+
       <textarea
+        id="message"
         name="message"
         placeholder="Mensaje"
         value={form.message}
@@ -118,9 +133,10 @@ export default function ContactForm() {
       />
 
       <p
-        class={`text-sm text-right font-medium ${counterColor} transition-colors duration-200`}
+        aria-live="polite"
+        class={`text-sm text-right font-medium ${counterColor}`}
       >
-        {messageLength} / 500
+        {messageLength} de 500 caracteres
       </p>
 
       <button
@@ -131,9 +147,11 @@ export default function ContactForm() {
       </button>
 
       <p
-        class={`mt-2 text-center transition-opacity duration-500 ${
-          showStatus ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+        role="status"
+        aria-live="polite"
+
+        class={`mt-2 text-center transition-opacity duration-500 ${showStatus ? "opacity-100" : "opacity-0"
+          }`}
       >
         {status}
       </p>
