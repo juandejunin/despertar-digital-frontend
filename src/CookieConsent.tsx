@@ -1,36 +1,103 @@
 /** @jsxImportSource preact */
 import { useState, useEffect } from "preact/hooks";
 
-export default function CookieConsentModal() {
+interface CookieConsentProps {
+  // callback opcional para notificar al layout si lo querés
+  onVisibleChange?: (visible: boolean) => void;
+  contentId?: string; // id del contenido principal para manejar aria-hidden
+}
+
+export default function CookieConsent({
+  onVisibleChange,
+  contentId = "app-content",
+}: CookieConsentProps) {
   const [visible, setVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
+  // Manejar visibilidad y notificar al padre si existe callback
+  const setVisibleWithCallback = (v: boolean) => {
+    setVisible(v);
+    onVisibleChange?.(v);
+
+    // Manejo de aria-hidden dinámico
+    const content = document.getElementById(contentId);
+    if (content) content.setAttribute("aria-hidden", v ? "true" : "false");
+  };
+
   useEffect(() => {
     const consent = localStorage.getItem("cookieConsent");
-    const currentPath = window.location.pathname;
+    if (!consent && window.location.pathname !== "/politica-privacidad") {
+      setVisibleWithCallback(true);
 
-    if (!consent && currentPath !== "/politica-privacidad") {
-      setVisible(true);
+      setTimeout(() => {
+        document.getElementById("cookie-banner")?.focus();
+      }, 50);
     }
   }, []);
 
+  useEffect(() => {
+    if (!visible) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        const focusable = Array.from(
+          document.querySelectorAll<HTMLElement>(
+            "#cookie-banner button, #cookie-banner a"
+          )
+        );
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [visible]);
+
+  useEffect(() => {
+    // Bloquear scroll si el modal está visible
+    if (visible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // Limpiar al desmontar
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [visible]);
+
+
   const handleConsent = (choice: "all" | "none" | "custom") => {
     localStorage.setItem("cookieConsent", choice);
-    setVisible(false);
+    setVisibleWithCallback(false);
+
     if (choice === "all") {
       if (!window.gtag) {
         const script = document.createElement("script");
-        script.src = "https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK";
+        script.src =
+          "https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK";
         script.async = true;
         document.head.appendChild(script);
 
         const inline = document.createElement("script");
         inline.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XX7WSF51QK');
-    `;
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-XX7WSF51QK');
+        `;
         document.head.appendChild(inline);
       }
     }
@@ -39,7 +106,13 @@ export default function CookieConsentModal() {
   if (!visible) return null;
 
   return (
-    <div class="fixed inset-0 bg-[#161617]/90 backdrop-blur-sm flex items-center justify-center z-50">
+    <div
+      id="cookie-banner"
+      role="dialog"
+      aria-modal="true"
+      tabIndex={0}
+      class="fixed inset-0 bg-[#161617]/90 backdrop-blur-sm flex items-center justify-center z-[999]"
+    >
       <div class="bg-[#161617] text-gray-100 rounded-2xl shadow-2xl max-w-lg w-[90%] p-6 border border-gray-800">
         {!showSettings ? (
           <>
@@ -97,8 +170,7 @@ export default function CookieConsentModal() {
 
             <div class="flex flex-col gap-2 text-sm mb-5 text-gray-200">
               <label class="flex items-center gap-2">
-                <input type="checkbox" checked disabled /> Esenciales
-                (requeridas)
+                <input type="checkbox" checked disabled /> Esenciales (requeridas)
               </label>
               <label class="flex items-center gap-2">
                 <input type="checkbox" /> Analíticas

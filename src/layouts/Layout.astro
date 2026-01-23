@@ -1,8 +1,9 @@
 ---
+// Layout.astro
 import Footer from "../components/Footer.astro";
 import InfoBar from "../components/InfoBar.astro";
 import NavBar from "../components/NavBar.astro";
-import CookieConsent from "../CookieConsent";
+import CookieConsent from "../CookieConsent"; // Preact
 import "../styles/global.css";
 ---
 
@@ -10,80 +11,46 @@ import "../styles/global.css";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.png" sizes="any">
+    <link rel="icon" href="/favicon.png" sizes="any" />
 
     <title>Despertar Digital</title>
-    <meta
-      name="description"
-      content="Solo datos, sin relatos. Noticias automatizadas y objetivas."
-    />
+    <meta name="description" content="Solo datos, sin relatos. Noticias automatizadas y objetivas." />
 
     <slot name="head" />
 
-    <!-- ===================== -->
-    <!-- Google Analytics + Consent Mode (SAFE ORDER) -->
-    <!-- ===================== -->
-
-    <!-- 1️⃣ Definición global de dataLayer y gtag -->
+    <!-- Google Analytics + Consent Mode -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      window.gtag = function () {
-        window.dataLayer.push(arguments);
-      };
-
-      // Consentimiento por defecto: TODO DENEGADO
+      window.gtag = function(){ window.dataLayer.push(arguments); };
       window.gtag("consent", "default", {
         analytics_storage: "denied",
         ad_storage: "denied",
         ad_user_data: "denied",
         ad_personalization: "denied",
-        wait_for_update: 800,
+        wait_for_update: 800
       });
     </script>
-
-    <!-- 2️⃣ Carga de Google Analytics (async, sin riesgo) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK"
-    ></script>
-
-    <!-- 3️⃣ Activación SOLO si ya hubo consentimiento -->
-    <script is:inline>
-      const consent = localStorage.getItem("cookieConsent");
-
-      if (consent === "all") {
-        window.gtag("js", new Date());
-        window.gtag("config", "G-XX7WSF51QK");
-      }
-    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK"></script>
   </head>
 
-  <body
-    class="h-full min-h-screen flex flex-col overflow-y-scroll font-serifSystem text-gray-900 bg-gray-300"
-  >
-    <!-- Banner de cookies -->
+  <body class="h-full min-h-screen flex flex-col overflow-y-scroll font-serifSystem text-gray-900 bg-gray-300">
+    
+    <!-- Banner de cookies (solo 1) -->
     <CookieConsent client:load />
 
-    <!-- NavBar (fijo arriba) -->
-    <div class="fixed top-0 left-0 w-full z-50">
-      <NavBar />
+    <!-- Contenido principal -->
+    <div id="app-content">
+      <a href="#main-content" class="sr-only focus:not-sr-only p-2 bg-blue-600 text-white">Saltar al contenido</a>
+
+      <div class="fixed top-0 left-0 w-full z-50"><NavBar /></div>
+      <div class="fixed top-20 left-0 w-full z-40"><InfoBar lastUpdate="12:27" /></div>
+
+      <main id="main-content" role="main" tabindex="-1" class="flex-1 pt-32">
+        <slot />
+      </main>
+
+      <Footer />
     </div>
 
-    <!-- InfoBar (debajo del nav) -->
-    <div class="fixed top-20 left-0 w-full z-40">
-      <!-- top-20 ≈ NavBar (72px) -->
-      <InfoBar lastUpdate="12:27" />
-    </div>
-
-    <!-- ===================== -->
-    <!-- CONTENIDO PRINCIPAL -->
-    <!-- ===================== -->
-    <main class="flex-1 pt-32">
-      <!-- pt-32 = NavBar + InfoBar + margen -->
-      <slot />
-    </main>
-
-    <!-- Footer -->
-    <Footer />
   </body>
 </html>

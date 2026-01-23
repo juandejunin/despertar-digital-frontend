@@ -4,6 +4,7 @@
 
 <nav
   class="j75-nav fixed w-full bg-despertar-dark text-astro-white z-50 flex items-center justify-between p-6"
+  aria-label="Navegación principal"
 >
   <!-- Logo -->
   <div class="text-2xl font-bold font-inconsolata text-white">
@@ -17,7 +18,9 @@
   <button
     id="j75-nav-toggle"
     class="md:hidden focus:outline-none relative z-[60] text-white"
-    aria-label="Toggle menu"
+    aria-label="Ahora el menú está cerrado, presione para abrirlo"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
   >
     <div class="hamburger-icon">
       <span class="line line1"></span>
@@ -25,6 +28,8 @@
       <span class="line line3"></span>
     </div>
   </button>
+
+  <div id="nav-status" class="sr-only" aria-live="polite"></div>
 
   <!-- Overlay con transición -->
   <div
@@ -48,10 +53,12 @@
         <li class="relative">
           <button
             class="nav-link w-full text-left hover:text-astro-secondary-light toggle-submenu"
+            aria-expanded="false"
+            aria-controls="submenu-deportes"
           >
             Deportes
           </button>
-          <ul class="hidden ml-4 mt-2 space-y-2 text-lg">
+          <ul id="submenu-deportes" class="hidden ml-4 mt-2 space-y-2 text-lg">
             <li>
               <a
                 href="/deportes/futbol"
@@ -82,10 +89,12 @@
         <li class="relative">
           <button
             class="nav-link w-full text-left hover:text-astro-secondary-light toggle-submenu"
+            aria-expanded="false"
+            aria-controls="submenu-economia"
           >
             Economía
           </button>
-          <ul class="hidden ml-4 mt-2 space-y-2 text-lg">
+          <ul id="submenu-economia" class="hidden ml-4 mt-2 space-y-2 text-lg">
             <li>
               <a
                 href="/economia/criptomonedas"
@@ -145,10 +154,15 @@
       >
     </li>
     <li class="relative group">
-      <button class="nav-link hover:text-astro-secondary-light cursor-pointer">
+      <button
+        class="nav-link hover:text-astro-secondary-light cursor-pointer"
+        aria-expanded="false"
+        aria-controls="submenu-desktop-deportes"
+      >
         Deportes
       </button>
       <ul
+        id="submenu-desktop-deportes"
         class="absolute left-0 top-full mt-0 bg-black text-white rounded shadow-lg space-y-1 py-2
              opacity-0 invisible
              group-hover:opacity-100 group-hover:visible
@@ -175,10 +189,15 @@
       </ul>
     </li>
     <li class="relative group">
-      <button class="nav-link hover:text-astro-secondary-light cursor-pointer">
+      <button
+        class="nav-link hover:text-astro-secondary-light cursor-pointer"
+        aria-expanded="false"
+        aria-controls="submenu-desktop-economia"
+      >
         Economía
       </button>
       <ul
+        id="submenu-desktop-economia"
         class="absolute left-0 top-full mt-0 bg-black text-white rounded shadow-lg space-y-1 py-2
              opacity-0 invisible
              group-hover:opacity-100 group-hover:visible
@@ -236,24 +255,77 @@
   const menuToggle = document.getElementById("j75-nav-toggle");
   const mobileMenu = document.getElementById("mobile-menu");
   const overlay = document.getElementById("overlay");
+  const navStatus = document.getElementById("nav-status");
+  const setNavStatus = (text: string) => {
+    if (navStatus) navStatus.textContent = text;
+  };
+
+  const getFocusableElements = (container: HTMLElement) =>
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex="0"]',
+    );
 
   if (menuToggle && mobileMenu && overlay) {
     const openMenu = () => {
       menuToggle.classList.add("open");
+      menuToggle.setAttribute("aria-expanded", "true");
+      menuToggle.setAttribute("aria-label", "Cerrar menú");
       mobileMenu.classList.remove("w-0");
       mobileMenu.classList.add("w-3/4", "opacity-100");
       mobileMenu.classList.remove("overflow-hidden");
       mobileMenu.classList.add("overflow-auto");
+      setNavStatus("Ahora el menú está expandido, desea cerrarlo?");
       overlay.classList.remove("opacity-0");
       overlay.classList.remove("pointer-events-none");
       overlay.classList.add("opacity-100");
+
+      const focusableElements = getFocusableElements(mobileMenu);
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+
+      //foco en el primer elemento al abrir
+      first?.focus();
+
+      // Función para mantener el foco dentro del menú
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (!mobileMenu.classList.contains("w-3/4")) return; // solo si el menú está abierto
+        if (e.key === "Tab") {
+          const focusableElements = getFocusableElements(mobileMenu);
+          const first = focusableElements[0];
+          const last = focusableElements[focusableElements.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last?.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first?.focus();
+            }
+          }
+        }
+
+        // Cerrar menú con Esc
+        if (e.key === "Escape") {
+          closeMenu();
+          menuToggle.focus(); // devuelve foco al botón
+        }
+      };
+
+      // Listener para mantener el foco dentro del menú
+      mobileMenu.addEventListener("keydown", handleKeyDown);
     };
     const closeMenu = () => {
       menuToggle.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Abrir menú");
       mobileMenu.classList.add("w-0", "opacity-0");
       mobileMenu.classList.remove("w-3/4", "opacity-100");
       mobileMenu.classList.add("overflow-hidden");
       mobileMenu.classList.remove("overflow-auto");
+      setNavStatus("El menú está cerrado, desea abrirlo?");
       overlay.classList.add("opacity-0");
       overlay.classList.add("pointer-events-none");
       overlay.classList.remove("opacity-100");
@@ -277,7 +349,12 @@
       .forEach((btn) => {
         btn.addEventListener("click", () => {
           const submenu = btn.nextElementSibling as HTMLElement | null;
-          submenu?.classList.toggle("hidden");
+          if (!submenu) return;
+
+          const isOpen = !submenu.classList.contains("hidden");
+
+          submenu.classList.toggle("hidden");
+          btn.setAttribute("aria-expanded", String(!isOpen));
         });
       });
 
@@ -290,17 +367,17 @@
         const toggleSubmenu = (e: Event) => {
           if (window.innerWidth >= 768) {
             const submenu = button.nextElementSibling as HTMLElement | null;
-            if (submenu) {
-              e.preventDefault();
-              // Toggle con transición suave
-              if (submenu.classList.contains("opacity-0")) {
-                submenu.classList.remove("opacity-0", "invisible");
-                submenu.classList.add("opacity-100", "visible");
-              } else {
-                submenu.classList.remove("opacity-100", "visible");
-                submenu.classList.add("opacity-0", "invisible");
-              }
+            if (!submenu) return;
+            e.preventDefault();
+            const isOpen = submenu.classList.contains("opacity-100");
+            if (isOpen) {
+              submenu.classList.remove("opacity-100", "visible");
+              submenu.classList.add("opacity-0", "invisible");
+            } else {
+              submenu.classList.remove("opacity-0", "invisible");
+              submenu.classList.add("opacity-100", "visible");
             }
+            button.setAttribute("aria-expanded", String(!isOpen));
           }
         };
 
