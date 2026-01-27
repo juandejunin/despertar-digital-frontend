@@ -33,13 +33,15 @@ import "../styles/global.css";
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK"></script>
   </head>
 
-  <body class="h-full min-h-screen flex flex-col overflow-y-scroll font-serifSystem text-gray-900 bg-gray-300">
+  <body class="min-h-screen overflow-y-scroll font-serifSystem text-gray-900 bg-gray-300">
+
     
     <!-- Banner de cookies (solo 1) -->
     <CookieConsent client:load />
 
     <!-- Contenido principal -->
-    <div id="app-content">
+    <div id="app-content" class="min-h-screen flex flex-col">
+
       <a href="#main-content" class="sr-only focus:not-sr-only p-2 bg-blue-600 text-white">Saltar al contenido</a>
 
       <div class="fixed top-0 left-0 w-full z-50"><NavBar /></div>
