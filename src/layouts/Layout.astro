@@ -32,27 +32,18 @@ import "../styles/global.css";
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XX7WSF51QK"></script>
   </head>
-
-  <body class="min-h-screen overflow-y-scroll font-serifSystem text-gray-900 bg-gray-300">
-
-    
+  <body class="min-h-screen overflow-y-scroll font-serifSystem text-gray-900 bg-gray-300">    
     <!-- Banner de cookies (solo 1) -->
     <CookieConsent client:load />
-
     <!-- Contenido principal -->
     <div id="app-content" class="min-h-screen flex flex-col">
-
       <a href="#main-content" class="sr-only focus:not-sr-only p-2 bg-blue-600 text-white">Saltar al contenido</a>
-
       <div class="fixed top-0 left-0 w-full z-50"><NavBar /></div>
       <div class="fixed top-20 left-0 w-full z-40"><InfoBar lastUpdate="12:27" /></div>
-
       <main id="main-content" role="main" tabindex="-1" class="flex-1 pt-32">
         <slot />
       </main>
-
       <Footer />
     </div>
-
   </body>
 </html>

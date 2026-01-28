@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  footer?: boolean;
+}
+
+const { title, subtitle, footer = false } = Astro.props;
+---
+
+<article
+  class="bg-white rounded-xl shadow-md border border-gray-100
+         hover:shadow-lg transition-shadow
+         flex flex-col w-full max-w-md min-h-[360px]"
+  role="region"
+  aria-labelledby="card-title"
+>
+  <!-- Header -->
+  <header class="p-5 pb-3 border-b border-gray-100">
+    <h3
+      id="card-title"
+      class="text-lg font-bold text-gray-800"
+    >
+      {title}
+    </h3>
+
+    {subtitle && (
+      <p class="text-xs text-gray-500 mt-1">
+        {subtitle}
+      </p>
+    )}
+  </header>
+
+  <!-- Body -->
+  <section class="flex-1 p-5 pt-4">
+    <slot />
+  </section>
+
+  <!-- Footer (opcional) -->
+  {footer && (
+    <footer class="p-4 pt-2 border-t border-gray-100 text-sm text-gray-500">
+      <slot name="footer" />
+    </footer>
+  )}
+</article>
