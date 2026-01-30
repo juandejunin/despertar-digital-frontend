@@ -1,0 +1,39 @@
+---
+// BaseEditorialCard.astro
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<article
+  class=" rounded-xl border  
+         hover:shadow-md transition-shadow
+         flex flex-col w-full max-w-md min-h-[360px]"
+  role="region"
+  aria-labelledby="editorial-card-title"
+>
+  <!-- Header -->
+  <header class="flex items-center justify-between px-5 py-4 border-b ">
+    <h3
+      id="editorial-card-title"
+      class="text-lg font-semibold text-gray-800"
+    >
+      {title}
+    </h3>
+
+    <!-- Slot opcional para acciones (icono, botón, etc) -->
+    <slot name="header" />
+  </header>
+
+  <!-- Body -->
+  <section class="flex-1 px-5 py-4 flex items-center justify-center">
+    <slot />
+  </section>
+
+  <!-- Footer -->
+  <footer class="px-5 py-4 border-t ">
+    <slot name="footer" />
+  </footer>
+</article>

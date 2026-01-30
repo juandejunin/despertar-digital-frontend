@@ -10,6 +10,7 @@ export function forexTrendToSlide(
     kind: 'forex',
     type: 'forex',
     pair: `${base}/${trend.currency}`,
+    today: trend.today,
     change1d: computeChange(trend, 1),
     change7d: computeChange(trend, 7),
     change30d: computeChange(trend, 30),

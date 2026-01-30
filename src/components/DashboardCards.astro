@@ -3,11 +3,13 @@ import WeatherCard from "./WeatherCard.astro";
 import DolarCard from "./DolarCard.astro";
 import SportsCard from "../features/deportes/SportsCard.astro";
 
+import EconomiaCard from "@/features/economia/overview/EconomiaCard.astro";
+
 const TODAY_API = import.meta.env.PUBLIC_API_URL + "/weather/today-air";
 ---
 
 <section class="py-16 flex flex-wrap justify-center gap-6">
   <WeatherCard apiUrl={TODAY_API} />
-  <DolarCard />
+  <EconomiaCard  apiUrl={TODAY_API}/>
   <SportsCard />
 </section>

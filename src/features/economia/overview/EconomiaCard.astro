@@ -1,0 +1,20 @@
+---
+import BaseEditorialCard from "../../card/BaseEditorialCard.astro";
+import EconomyShowcase from "@/features/economia/overview/islands/EconomyShowcase.tsx";
+import { mockCryptoData } from "../../../../tests/mocks/crypto/mockCryptoData";
+import { cryptoDataToSlide } from "@/features/economia/adapters/cryptoToEconomySlide";
+import { mockForexSlides } from "../../../../tests/mocks/forex/mockForexData";
+import type { ForexSlide as OverviewForexSlide } from "@/features/economia/overview/types/ForexSlide";
+
+const cryptoSlides = mockCryptoData.map(cryptoDataToSlide);
+const forexSlides: OverviewForexSlide[] = mockForexSlides.map(f => ({
+  ...f,
+  currency: f.pair.split("/")[1] // ejemplo, extrae la moneda del pair
+}));
+---
+
+<BaseEditorialCard title="Economía Hoy">
+  <div class="flex-1">
+    <EconomyShowcase forexSlides={forexSlides} cryptoSlides={cryptoSlides} client:load />
+  </div>
+</BaseEditorialCard>

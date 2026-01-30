@@ -2,25 +2,19 @@
 interface Props {
   title: string;
   subtitle?: string;
-  footer?: boolean;
 }
-
-const { title, subtitle, footer = false } = Astro.props;
+const { title, subtitle } = Astro.props;
 ---
 
 <article
-  class="bg-white rounded-xl shadow-md border border-gray-100
-         hover:shadow-lg transition-shadow
-         flex flex-col w-full max-w-md min-h-[360px]"
-  role="region"
-  aria-labelledby="card-title"
+  class="bg-white border border-gray-100
+         rounded-xl shadow-md
+         flex flex-col w-full max-w-md min-h-[360px]
+         hover:shadow-lg transition-shadow"
 >
   <!-- Header -->
-  <header class="p-5 pb-3 border-b border-gray-100">
-    <h3
-      id="card-title"
-      class="text-lg font-bold text-gray-800"
-    >
+  <header class="p-5 pb-3">
+    <h3 class="text-lg font-bold text-gray-800">
       {title}
     </h3>
 
@@ -32,14 +26,12 @@ const { title, subtitle, footer = false } = Astro.props;
   </header>
 
   <!-- Body -->
-  <section class="flex-1 p-5 pt-4">
+  <section class="flex-1 px-5">
     <slot />
   </section>
 
-  <!-- Footer (opcional) -->
-  {footer && (
-    <footer class="p-4 pt-2 border-t border-gray-100 text-sm text-gray-500">
-      <slot name="footer" />
-    </footer>
-  )}
+  <!-- Footer / Action -->
+  <footer class="p-5 pt-4">
+    <slot name="action" />
+  </footer>
 </article>

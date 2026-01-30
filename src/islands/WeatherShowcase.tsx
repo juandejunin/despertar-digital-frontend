@@ -27,7 +27,7 @@ export default function WeatherShowcase({ apiUrl }: Props) {
     ES: ["Madrid", "Barcelona", "Sevilla", "Bilbao", "Valencia"],
   };
 
-    // 🛰️ Función reutilizable para cargar ciudades
+  // 🛰️ Función reutilizable para cargar ciudades
   const loadCities = (savedCity?: string | null) => {
     fetch(apiUrl)
       .then((res) => res.json())
@@ -60,7 +60,7 @@ export default function WeatherShowcase({ apiUrl }: Props) {
   // 🔔 Nuevo: escucha cuando el usuario selecciona una nueva ciudad
   useEffect(() => {
     const handleCitySelected = (e: CustomEvent) => {
-      
+
       const newCity = e.detail;
       setUserCity(newCity);
       localStorage.setItem("userCity", newCity);
