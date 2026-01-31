@@ -10,7 +10,7 @@ export default function EconomyItem({ item }: Props) {
   // 🪙 Crypto
   if (item.type === "crypto") {
     return (
-      <div class="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-sm border border-gray-100 w-64">
+      <div class="flex flex-col items-center gap-2 p-4  w-64">
         <p class="text-lg font-bold text-gray-800">{item.symbol}</p>
         <p class="text-gray-600">{item.name}</p>
 
@@ -44,7 +44,7 @@ export default function EconomyItem({ item }: Props) {
   // 💱 Forex
   if (item.type === "forex") {
     return (
-      <div class="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-sm border border-gray-100 w-64">
+      <div class="flex flex-col items-center gap-2 p-4   w-64">
         <p class="text-lg font-bold text-gray-800">USD / {item.currency}</p>
 
         <p class="text-xl font-semibold text-gray-900">

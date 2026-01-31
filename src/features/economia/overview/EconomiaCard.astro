@@ -1,6 +1,7 @@
 ---
 import BaseEditorialCard from "../../card/BaseEditorialCard.astro";
 import EconomyShowcase from "@/features/economia/overview/islands/EconomyShowcase.tsx";
+import EconomyShowcaseClient from "./EconomyShowcaseClient.tsx";
 import { mockCryptoData } from "../../../../tests/mocks/crypto/mockCryptoData";
 import { cryptoDataToSlide } from "@/features/economia/adapters/cryptoToEconomySlide";
 import { mockForexSlides } from "../../../../tests/mocks/forex/mockForexData";
@@ -15,6 +16,6 @@ const forexSlides: OverviewForexSlide[] = mockForexSlides.map(f => ({
 
 <BaseEditorialCard title="Economía Hoy">
   <div class="flex-1">
-    <EconomyShowcase forexSlides={forexSlides} cryptoSlides={cryptoSlides} client:load />
+    <EconomyShowcaseClient client:load />
   </div>
 </BaseEditorialCard>
