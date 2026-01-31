@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Tipografía editorial con números alineados */
+html {
+  font-feature-settings: "lnum" 1;
+}
