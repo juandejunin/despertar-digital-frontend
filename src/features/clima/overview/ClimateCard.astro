@@ -1,0 +1,23 @@
+---
+import BaseEditorialCard from "../../card/BaseEditorialCard.astro";
+import WeatherShowcase from "./islands/WeatherShowcase.tsx";
+import LocationButtonIsland from "./islands/LocationButtonIsland";
+
+const { apiUrl } = Astro.props;
+const API_BASE = import.meta.env.PUBLIC_API_URL;
+---
+
+<BaseEditorialCard title="Clima Hoy">
+  <!-- Header -->
+  <span slot="header">🌤️</span>
+
+  <!-- Body: envolvemos el componente en un div -->
+  <div class="flex-1 w-full">
+    <WeatherShowcase apiUrl={apiUrl} client:load />
+  </div>
+
+    <!-- Footer -->
+  <div slot="footer" class="w-full">
+    <LocationButtonIsland apiBase={API_BASE} client:load />
+  </div>
+</BaseEditorialCard>

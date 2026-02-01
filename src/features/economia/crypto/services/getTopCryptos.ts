@@ -1,6 +1,3 @@
-
-
-
 // src/features/economia/cripto/services/getTopCryptos.ts
 import type { CryptoData } from "../types/crypto";
 

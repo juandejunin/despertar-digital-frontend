@@ -1,0 +1,14 @@
+---
+import BaseEditorialCard from "../../card/BaseEditorialCard.astro";
+import SportsShowcase from "./islands/SportsShowcase.tsx";
+
+const API_URL = import.meta.env.PUBLIC_DEPORTES_API_URL;
+---
+
+<BaseEditorialCard title="Deportes">
+  <span slot="header">🏃</span>
+  <SportsShowcase apiUrl={API_URL} client:load />
+  <div slot="footer" class="text-[10px] text-gray-900 text-center mt-2 select-none">
+    Click para siguiente · Shift + Click para anterior
+  </div>
+</BaseEditorialCard>
