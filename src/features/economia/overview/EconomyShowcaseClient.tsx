@@ -2,9 +2,9 @@
 /** @jsxImportSource preact */
 import { useState, useEffect } from "preact/hooks";
 import EconomyShowcase from "./islands/EconomyShowcase";
-import { cryptoDataToSlide } from "@/features/deportes/overview/economia/adapters/cryptoToEconomySlide";
-import type { CryptoSlide } from "@/features/deportes/overview/economia/overview/types/OverviewCryptoSlide";
-import type { ForexSlide } from "@/features/deportes/overview/economia/overview/types/OverviewForexSlide";
+import { cryptoDataToSlide } from "../adapters/cryptoToEconomySlide";
+import type { CryptoSlide } from "./types/OverviewCryptoSlide";
+import type { ForexSlide } from "./types/OverviewForexSlide";
 
 
 export default function EconomyShowcaseClient() {
