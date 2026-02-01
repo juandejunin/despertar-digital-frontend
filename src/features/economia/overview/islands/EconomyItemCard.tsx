@@ -1,5 +1,5 @@
 /** @jsxImportSource preact */
-import type { ForexSlide } from "../types/ForexSlide";
+import type { ForexSlide } from "../types/OverviewForexSlide";
 import type { CryptoSlide } from "../../crypto/types/CryptoSlide";
 
 type Props = {
@@ -10,7 +10,7 @@ export default function EconomyItem({ item }: Props) {
   // 🪙 Crypto
   if (item.type === "crypto") {
     return (
-      <div class="flex flex-col items-center gap-2 p-4  w-64">
+      <div class="flex flex-col items-center gap-2 p-5  w-64">
         <p class="text-lg font-bold text-gray-800">{item.symbol}</p>
         <p class="text-gray-600">{item.name}</p>
 
@@ -20,7 +20,7 @@ export default function EconomyItem({ item }: Props) {
           <p class="text-sm text-gray-400">Precio no disponible</p>
         )}
 
-        <div class="flex flex-col gap-1 mt-2 w-full text-sm">
+        <div class="flex flex-col items-center gap-1 mt-2 w-full text-sm">
           {item.change1h !== undefined && (
             <p class={item.change1h >= 0 ? "text-green-600" : "text-red-600"}>
               1h: {item.change1h.toFixed(2)}%

@@ -1,6 +1,6 @@
-import { forexTrendToSlide } from '@/features/economia/adapters/forexToEconomySlide';
-import type { ForexSlide } from '@/features/economia/forex/types/ForexSlide';
-import type { ForexTrendBackend } from '@/features/economia/forex/types/ForexTrendBackend';
+import { forexTrendToSlide } from '@/features/deportes/overview/economia/adapters/forexToEconomySlide';
+import type { ForexSlide } from '@/features/deportes/overview/economia/forex/types/ForexSlide';
+import type { ForexTrendBackend } from '@/features/deportes/overview/economia/forex/types/ForexTrendBackend';
 
 describe('Adaptador forexTrendToSlide', () => {
     it('debería convertir correctamente una tendencia de Forex del backend a ForexSlide', () => {

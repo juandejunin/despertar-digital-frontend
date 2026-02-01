@@ -1,5 +1,5 @@
-import { cryptoDataToSlide } from '@/features/economia/adapters/cryptoToEconomySlide';
-import type { CryptoSlide } from '@/features/economia/crypto/types/CryptoSlide';
+import { cryptoDataToSlide } from '@/features/deportes/overview/economia/adapters/cryptoToEconomySlide';
+import type { CryptoSlide } from '@/features/deportes/overview/economia/crypto/types/CryptoSlide';
 import { mockCryptoData } from '../mocks/crypto/mockCryptoData'
 
 describe('Adaptador cryptoDataToSlide', () => {

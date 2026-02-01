@@ -1,6 +1,6 @@
 /** @jsxImportSource preact */
 import { useEffect, useState } from "preact/hooks";
-import type { ForexSlide } from "../types/ForexSlide";
+import type { ForexSlide } from "../types/OverviewForexSlide";
 import type { CryptoSlide } from "../../crypto/types/CryptoSlide";
 import EconomyItem from "./EconomyItemCard";
 

@@ -2,7 +2,7 @@
 // src/features/clima/pages/index.astro
 import Layout from "../layouts/Layout.astro";  // sube 4 niveles
 import WeatherCityTables from "../features/clima/components/WeatherCityTables";  // relativo a features/clima
-import LocationButtonIsland from "../islands/LocationButtonIsland";
+import LocationButtonIsland from "../features/clima/islands/LocationButtonIsland";
 
 const API_BASE = import.meta.env.PUBLIC_API_URL;
 const forecastApi = `${API_BASE}/weather/forecast`;

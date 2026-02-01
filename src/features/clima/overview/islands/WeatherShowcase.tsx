@@ -1,6 +1,6 @@
 /** @jsxImportSource preact */
 import { useEffect, useState } from "preact/hooks";
-import WeatherCard from "./WeatherCard";
+import WeatherCard from "../components/WeatherCard";
 
 interface WeatherData {
   location: { city: string; country: string };

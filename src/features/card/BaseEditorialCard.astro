@@ -8,18 +8,15 @@ const { title } = Astro.props;
 ---
 
 <article
-  class=" rounded-xl border  
+  class="bg-white rounded-xl border
          hover:shadow-md transition-shadow
          flex flex-col w-full max-w-md min-h-[360px]"
   role="region"
   aria-labelledby="editorial-card-title"
 >
   <!-- Header -->
-  <header class="flex items-center justify-between px-5 py-4 border-b ">
-    <h3
-      id="editorial-card-title"
-      class="text-lg font-semibold text-gray-800"
-    >
+  <header class="flex items-center justify-between px-5 py-4 border-b">
+    <h3 id="editorial-card-title" class="text-lg font-semibold text-gray-800">
       {title}
     </h3>
 
@@ -28,12 +25,15 @@ const { title } = Astro.props;
   </header>
 
   <!-- Body -->
-  <section class="flex-1 px-5 py-4 flex items-center justify-center">
+  <section
+  class="flex-1 px-5 py-4 flex flex-col items-stretch justify-between
+         min-h-[350px] max-h-[350px]"
+>
     <slot />
   </section>
 
   <!-- Footer -->
-  <footer class="px-5 py-4 border-t ">
+  <footer class="px-5 py-4 h-[100px] flex items-center justify-center">
     <slot name="footer" />
   </footer>
 </article>

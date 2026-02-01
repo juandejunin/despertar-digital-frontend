@@ -1,4 +1,4 @@
-import type { EconomySlideBase } from "../../overview/types/EconomySlideBase";
+import type { EconomySlideBase } from "./EconomySlideBase";
 
 export interface ForexSlide extends EconomySlideBase {
   type: 'forex';

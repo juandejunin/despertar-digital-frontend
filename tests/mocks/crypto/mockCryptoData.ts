@@ -1,5 +1,5 @@
 // src/features/economia/crypto/mocks/mockCryptoData.ts
-import type { CryptoData } from '@/features/economia/crypto/types/crypto';
+import type { CryptoData } from '@/features/deportes/overview/economia/crypto/types/crypto';
 
 export const mockCryptoData: CryptoData[] = [
   {

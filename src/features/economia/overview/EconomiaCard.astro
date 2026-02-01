@@ -1,11 +1,11 @@
 ---
 import BaseEditorialCard from "../../card/BaseEditorialCard.astro";
-import EconomyShowcase from "@/features/economia/overview/islands/EconomyShowcase.tsx";
+import EconomyShowcase from "@/features/deportes/overview/economia/overview/islands/EconomyShowcase.tsx";
 import EconomyShowcaseClient from "./EconomyShowcaseClient.tsx";
-import { mockCryptoData } from "../../../../tests/mocks/crypto/mockCryptoData";
-import { cryptoDataToSlide } from "@/features/economia/adapters/cryptoToEconomySlide";
-import { mockForexSlides } from "../../../../tests/mocks/forex/mockForexData";
-import type { ForexSlide as OverviewForexSlide } from "@/features/economia/overview/types/ForexSlide";
+import { mockCryptoData } from "../../../../../../tests/mocks/crypto/mockCryptoData.ts";
+import { cryptoDataToSlide } from "@/features/deportes/overview/economia/adapters/cryptoToEconomySlide.ts";
+import { mockForexSlides } from "../../../../../../tests/mocks/forex/mockForexData.ts";
+import type { ForexSlide as OverviewForexSlide } from "@/features/deportes/overview/economia/overview/types/OverviewForexSlide.ts";
 
 const cryptoSlides = mockCryptoData.map(cryptoDataToSlide);
 const forexSlides: OverviewForexSlide[] = mockForexSlides.map(f => ({
@@ -15,6 +15,7 @@ const forexSlides: OverviewForexSlide[] = mockForexSlides.map(f => ({
 ---
 
 <BaseEditorialCard title="Economía Hoy">
+  <span slot="header">💹</span>
   <div class="flex-1">
     <EconomyShowcaseClient client:load />
   </div>

@@ -1,12 +1,14 @@
 import type { EconomySlideBase } from "../../overview/types/EconomySlideBase";
 
 export interface ForexSlide extends EconomySlideBase {
-  type: "forex";
-  pair: string;       // ej: USD/EUR
-  today: number;  
+  type: 'forex';
+  currency: string;          // ej: AUD, BRL
+  today: number;             // valor actual
+  trend?: 'up' | 'down' | 'stable';
   change1d?: number;
   change7d?: number;
   change30d?: number;
   change180d?: number;
   change365d?: number;
 }
+

@@ -2,7 +2,7 @@
 // Este mock simula el OUTPUT del adapter forexTrendToSlide()
 // Es decir: array de ForexSlide[] listo para usar
 
-import type { ForexSlide } from "@/features/economia/forex/types/ForexSlide";
+import type { ForexSlide } from "@/features/deportes/overview/economia/forex/types/ForexSlide";
 
 export const mockForexSlides: ForexSlide[] = [
   // Dólar Blue (custom, no viene del backend Frankfurter, pero lo agregamos manual)
